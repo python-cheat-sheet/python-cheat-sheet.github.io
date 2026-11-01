@@ -2,415 +2,1640 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>FAST INFO</title>
+  <title>Python Cheat Sheet</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Unbounded:wght@700;900&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg:        #0a0e14;
+      --surface:   #0f1520;
+      --surface2:  #151d2e;
+      --border:    #1e2d45;
+      --green:     #39ff8f;
+      --green-dim: #1a7a46;
+      --cyan:      #00d4ff;
+      --yellow:    #ffd966;
+      --red:       #ff5f6d;
+      --purple:    #c084fc;
+      --text:      #c9d8f0;
+      --muted:     #5a7fa8;
+      --sidebar-w: 240px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
     body {
-      margin: 0;
-      padding: 0;
-      background: #2e7d32;
-      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13.5px;
+      line-height: 1.7;
     }
 
-    .container {
-      max-width: 900px;
-      margin: 40px auto;
-      background: #1b5e20;
-      padding: 30px 25px;
-      box-sizing: border-box;
-      border-radius: 8px;
+    /* ───── SIDEBAR ───── */
+    #sidebar {
+      position: fixed;
+      top: 0; left: 0;
+      width: var(--sidebar-w);
+      height: 100vh;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+    }
+    #sidebar::-webkit-scrollbar { width: 4px; }
+    #sidebar::-webkit-scrollbar-thumb { background: var(--green-dim); border-radius: 2px; }
+
+    .sidebar-logo {
+      padding: 22px 18px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .sidebar-logo h1 {
+      font-family: 'Unbounded', sans-serif;
+      font-size: 13px;
+      font-weight: 900;
+      color: var(--green);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+    .sidebar-logo span {
+      font-size: 10px;
+      color: var(--muted);
+      display: block;
+      margin-top: 3px;
     }
 
-    h1 {
-      text-align: center;
-      color: #c8e6c9;
-      margin-bottom: 30px;
-      letter-spacing: 2px;
-    }
-
-    pre {
-      color: #e8f5e9;
-      white-space: pre-wrap;   /* перенос строк + перенос длинных строк */
-      word-break: break-word;  /* чтобы длинные слова не ломали вёрстку */
-      font-family: inherit;    /* не моноширинный шрифт */
-      margin: 0;
-    }
-
-    .prior1 {
-      background: #263238;
-      border-left: 5px solid #ff5252;
-      padding: 15px 20px;
-      margin: 20px 0;
+    #search-box {
+      margin: 12px 12px 8px;
+      background: var(--bg);
+      border: 1px solid var(--border);
       border-radius: 6px;
+      padding: 7px 10px;
+      color: var(--text);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      width: calc(100% - 24px);
+      outline: none;
+      transition: border-color .2s;
+    }
+    #search-box:focus { border-color: var(--green); }
+    #search-box::placeholder { color: var(--muted); }
+
+    nav { padding: 6px 0 20px; }
+    nav a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 18px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 11.5px;
+      transition: color .15s, background .15s;
+      border-left: 2px solid transparent;
+    }
+    nav a:hover { color: var(--green); background: rgba(57,255,143,.04); }
+    nav a.active { color: var(--green); border-left-color: var(--green); background: rgba(57,255,143,.06); }
+    nav .nav-icon { font-size: 14px; min-width: 16px; }
+
+    /* ───── MAIN ───── */
+    #main {
+      margin-left: var(--sidebar-w);
+      padding: 40px 40px 80px;
+      max-width: 900px;
     }
 
-    .prior2 {
-      color: #ff5252;
-      text-decoration: underline;
-      font-weight: bold;
+    /* ───── SEARCH BAR (top) ───── */
+    .top-search {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+    .top-search input {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 16px;
+      color: var(--text);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      outline: none;
+      transition: border-color .2s;
+    }
+    .top-search input:focus { border-color: var(--green); }
+    .top-search .badge {
+      font-size: 11px;
+      color: var(--muted);
+      white-space: nowrap;
     }
 
+    /* ───── SECTION ───── */
+    .section {
+      margin-bottom: 56px;
+      border-left: 2px solid var(--border);
+      padding-left: 24px;
+      transition: border-color .2s;
+    }
+    .section:hover { border-left-color: var(--green-dim); }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .section-icon {
+      font-size: 22px;
+      filter: drop-shadow(0 0 8px currentColor);
+    }
+    .section h2 {
+      font-family: 'Unbounded', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--green);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    /* ───── ENTRY ───── */
+    .entry {
+      margin-bottom: 22px;
+    }
+
+    .entry-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--yellow);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .entry-title .tag {
+      font-size: 9px;
+      background: var(--green-dim);
+      color: var(--green);
+      border-radius: 3px;
+      padding: 1px 5px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .entry-title .tag.tip { background: #2a1f4a; color: var(--purple); }
+    .entry-title .tag.warn { background: #3a1a1a; color: var(--red); }
+
+    .desc {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+
+    /* ───── CODE BLOCK ───── */
+    .code-block {
+      position: relative;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .code-block pre {
+      padding: 14px 16px;
+      overflow-x: auto;
+      font-size: 12.5px;
+      line-height: 1.65;
+    }
+    .code-block pre::-webkit-scrollbar { height: 4px; }
+    .code-block pre::-webkit-scrollbar-thumb { background: var(--border); }
+
+    .copy-btn {
+      position: absolute;
+      top: 8px; right: 8px;
+      background: var(--border);
+      border: none;
+      border-radius: 4px;
+      padding: 3px 9px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--muted);
+      cursor: pointer;
+      transition: background .15s, color .15s;
+      opacity: 0;
+      transition: opacity .2s;
+    }
+    .code-block:hover .copy-btn { opacity: 1; }
+    .copy-btn:hover { background: var(--green-dim); color: var(--green); }
+    .copy-btn.copied { color: var(--green); }
+
+    /* ───── SYNTAX COLORS ───── */
+    .kw   { color: var(--purple); }  /* keyword */
+    .fn   { color: var(--cyan); }    /* function */
+    .str  { color: var(--yellow); }  /* string */
+    .cmt  { color: var(--muted); font-style: italic; }   /* comment */
+    .num  { color: #ff9f7f; }        /* number */
+    .cls  { color: var(--green); }   /* class */
+    .op   { color: var(--red); }     /* operator */
+    .var  { color: var(--text); }
+
+    /* ───── INLINE CODE ───── */
+    code {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 1px 5px;
+      font-size: 12px;
+      color: var(--cyan);
+    }
+
+    /* ───── TABLE ───── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      margin-top: 6px;
+    }
+    th {
+      background: var(--surface2);
+      color: var(--green);
+      font-weight: 600;
+      padding: 8px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    td {
+      padding: 7px 12px;
+      border-bottom: 1px solid rgba(30,45,69,.6);
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(57,255,143,.03); }
+    td:first-child { color: var(--cyan); }
+    td:last-child { color: var(--muted); }
+
+    /* ───── GRID ───── */
+    .grid2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    @media (max-width: 700px) { .grid2 { grid-template-columns: 1fr; } }
+
+    /* ───── HIGHLIGHT BOX ───── */
+    .note {
+      background: rgba(57,255,143,.05);
+      border: 1px solid var(--green-dim);
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-size: 12px;
+      color: var(--text);
+      margin-top: 8px;
+    }
+    .note::before { content: "💡  "; }
+
+    .warn-box {
+      background: rgba(255,95,109,.05);
+      border: 1px solid rgba(255,95,109,.3);
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-size: 12px;
+      color: var(--text);
+      margin-top: 8px;
+    }
+    .warn-box::before { content: "⚠️  "; }
+
+    /* ───── DIVIDER ───── */
+    hr { border: none; border-top: 1px solid var(--border); margin: 30px 0; }
+
+    /* ───── NO RESULTS ───── */
+    #no-results { display: none; color: var(--muted); padding: 40px 0; font-size: 13px; }
+
+    /* ───── SCROLL INDICATOR ───── */
+    #progress {
+      position: fixed;
+      top: 0; left: var(--sidebar-w);
+      height: 2px;
+      background: var(--green);
+      width: 0%;
+      z-index: 200;
+      transition: width .1s;
+    }
+    #back-top {
+      position: fixed;
+      bottom: 30px; right: 30px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 12px;
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 18px;
+      display: none;
+      transition: color .2s;
+    }
+    #back-top:hover { color: var(--green); }
+
+    @media (max-width: 768px) {
+      #sidebar { display: none; }
+      #main { margin-left: 0; padding: 20px; }
+      #progress { left: 0; }
+    }
   </style>
 </head>
 <body>
 
-  <div class="container">
-    <h1>FAST INFO</h1>
-
-    <pre>
-# comments
-
-   <h2>список</h2>
-name = [ ] - список (array)
-
-name.append(значение) - добавить элемент к списку
-
-name.insert(место в списке, значение) - добовляет элемент по определенному индексу
-
-name.extend([значения]) - добавить список к списку
-
-name.sort() - сортировка от меньшего к большему
-
-name.reverse() - переворачевает все элементы в списке по местам зеркально
-
-name.pop() - удаляет элемент в списке по индексу (если пусто то последний элемент)
-
-name.remove(значение) - удаляет элемент в списке по определенному элементу
-
-name.clear() - очистить список полностю
-
-name.count() - считает количество заданного элемента
-
-len(name) - длина списка
-
-<hr>
-    <h2>множество</h2>
-name = set() - создать "множество" тоесть создать переменную где каждый символ отображен отдельно
-или
-name = {значение, значение} - если значение повторяеться то он не береться в счет
-
-name.add(значение) - добавить значение
-
-name.update(значение, значение) - добовляет значение ( в основном используют чтобы добавить несколько)
-
-name.remove(значение) - удалить значение
-
-name.pop() - удалить первый элемент
-
-name.clear() - очистить полностю всё множество
-
-<hr>
-    <h2>фрозен сет</h2>
-name = frozenset([значение, значение]) - множество + картеж (тоесть все элементы не повторяются и нельзя удалять, изменять, добовлять)
-
-<hr>
-    <h2>словарь</h2>
-name = {ключ: значение} - создает значение по ключу 
-или 
-name = {(картеж): значение} - создание значение по ключу которое являеться картежом 
-или 
-name = dict(ключ=значение) - создание значение по ключу
-
-name = { ключ: {ключ2: значение}} - создание словарь в словаре по ключу
-
-name = { ключ: [значение, значение]} - создание словарь с несколькими данными по ключу
-
-name = { ключ: ключ: значение} - создание словарь в словаре по ключу
-
-country.items() - относиться к ключям и значениям
-
-<div class="prior2">подказка</div>
-<div class="prior1">for key, value in name.items():
-    print(key, value)
-# цикл который выводит не только ключи но и значения 
-</div>
-name.get() - получить значение по ключу
-
-name.clear() - очистить словарь от всех элементов
-
-name.pop() - удаляет по ключу
-
-name.popitem() - удаляет последную в словаре
-
-name.keys() - получить из словаря только ключ
-
-name.values() - получить только значение
-
-name.update({ключ: значение}) - добавить значение и ключ
-
-name[ключ] = значение - обновить значение по ключу
-
-<hr>
-    <h2>картеж</h2>
-name = (,) - данные в виде картежа (данные нельзя добовлять, изменять, удалять)
-или 
-name = данная, данная - данные в виде картежа но в место круглых скобок запятые
-
-name2 = tuple(name) - делает картежом обычный список [] или если это просто переменная
-
-name.count() - считает сколько заданного элемента
-
-len(name) - число всех элементов
-
-<hr>
-    <h2>переменная</h2>
-name = значние - переменная
-
-del name - удалить переменную
-
-<div class ="prior1">
-str(name) - заменяет переменную на string
-int(name) - заменяет переменную на intager 
-bool(x) - преобразует значение в true или false
-</div>
-
-name.upper() - отоброжает всё в верхнем регистре
-
-name.isupper() - являеться ли элемент верхним регистром (если пусто то любой символ)
-
-name.lower() - отоброжает всё в нижнем регистре
-
-name.islower() - проверяет являеться ли элемент в нижнем регистре
-
-name.capitalize() - делает первую букву заглавной, остальные строчными
-
-name.find() - выводит индекс назначеной строки
-
-name.split() - разбивает строку по определенному символу (в скобках указать что он будет разделять)
-
-name2 = "символ между элементами".join(name) - обьеденяет список в строку (join)
-
-name[стартовый элемент:конечный элемент:шаги] - взять элементы как строку по индексам
-
-<hr>
-    <h2>действия</h2>
-print() - вывод значение в консоль
-
-<div class="prior2">подсказка</div>
-<div class="prior1">
-sep="" - разделяет строку назначеным значением
-end="" - перевод на новую строку, если пусто на ту же строку, можно указать символ который появиться после строки
-\n - перевод на следуйшую строку
-\ - символ перед ним выводиться как обычный символ
-\t - отступ
-max() - максимальное элемент
-min() - минимальный элемент
-abs() - число по модулю
-pow() - возводит число в степени
-round() - округляет число 
-// - округление к меньшему
-</div>
-input("что ввести") - получить данные от пользывателя
-
-if условие: - условие
-if not условие: - противоположное условие
-else: - если условие if/elif не сработало то сработает оно
-elif условие: - если не if то проверка этого условия
-and - если нужно 2 условия
-or - если нужно одно из условий
-
-<div class="prior1">name = "john" if условие else "Dutch": - функция if в одной строке</div>
-
-for i in range(сколько раз): - цикл с созданием переменной и количеством циклов
-или
-for i in range(от, до, по скольку переходить): - цикл
-или 
-for i in name: - повторит цикл столько сколько букв в переменной если строка
-
-while условие: - цикл
-
-break - выйти с цикла
-
-continue - пропустить операцию в цикле
-
-def название(параметры): - функция
-pass - нечего не выполнять
-
-return значение - вернуть значение из функции
-
-<div class="prior2"># пример</div> 
-<div class="prior1">
-def test(word, name):
-    print(word, name)
-
-test("hello world!", "John Marston")
-</div>
-name = lambda параметры: что происходит в функции - анонимная функция (используют если нужна короткая функция)
-
-<div class="prior2"># пример</div>
-<div class="prior1">
-func = lambda x, y: x + y
-result = func(2, 6)
-print(result) # вывод будет 8
-</div>
-
-<hr>
-    <h2>файлы</h2>
-name = open(название файла и его место, как воспринимать файл) - создает и открывает файл
-
-<div class="prior2"># типы файлов</div>
-<div class="prior1">
-'w' - стирает всё информацию после обновленя и создает новую, если файла нет то создаст
-'a' - работает как 'w' но каждый не стерает старую информацию
-'r' - формат для чтения, если такого файла нет то НЕ создаст
-</div>
-
-name.close() - закрывает файл (обезательно иметь)
-
-name.write() - вывод в файле 
-
-name.read(параметр) - если пусто то выводит весь текст который есть в текст, параметр выберает сколько символов вывести
-
-try: - считывает действия на ошибки
-    действия
-except ошибка: - если ошибка есть то сделать следуйшие действия 
-    действия
-finally: - срабатывает в любом случае (не обезательно иметь)
-
-<div class="prior2"># примеры ошибки</div>
-<div class="prior1">
-ValueError - ошибка при вводе данных
-ZeroDivisionError - ошибка при делении на 0
-FileNotFoundError - файл не обноружен
-и т.д.
-</div>
-
-with open(значения) as псевдоним - он открывает и самостоятельно закрывает файл
-
-<hr>
-    <h2>модули</h2>
-import модуль - импортировать модуль
-
-import модуль as псевдоним - в место оброщения к модулю ты оброщяешься к псевдониму и получаешь тот же результат
-
-from модуль import функция - импортировать конкретную функцию (жрет меньше памяти)
-
-<div class="prior2"># основные модули</div>
-<div class="prior1">
-datetime - дата
-time - время
-sys - система
-os - операционная система
-platform - платформа
-random - случайное число
-array - массивы
-math - математические функции
-webbrowser - веб 
-</div>
-
-<hr>
-    <h2>ООП </h2>
-class name - создает класс
-
-def name2(self, параметры) - self нужен для оброщения к параметрам класса
-
-<div class="prior2"># пример</div> 
-<div class="prior1">
-class name:
-    name = None
-    is_active = None
-
-    def set_data(self, user, is_active)
-    self.name = user
-    self.is_active = is_active
-
-name2 = name()
-name2.set_data("John", True)
-</div>
-
-def __init__(self, параметры): - конструктор, помогает установить данные сразу
-
-<div class="prior2"># пример</div>
-<div class="prior1">
-class name:
-    name = None
-    is_active = None
-
-    def __init__(self, user, is_active):
-
-    def set_data(self, user, is_active):
-    self.name = user
-    self.is_active = is_active
-
-name2 = name("John", True)
-</div>
-
-
-def set_data(self, user, is_active = значение) - переопределение методов, задать параметр по умолчанию
-
-<hr>
-    <h2>наследовать</h2>
-class name2(name): - наследование всех параметров следуйшему классу, можно иметь только 1 родителя
-
-super(name2, self).__init__(параметры родителя) - передать параметры  родителю
-
-super().имя функции() - взять функцию от родителя
-
-<div class="prior2"># пример - на примере класс Building наследуеться School</div> 
-<div class="prior1">
-class Building:
-    year = None
-    city = None
-    size = None
-    material = None
-
-    def __init__(self, year, city, size, material):
-        self.year = year
-        self.city = city
-        self.size = size
-        self.material = material
-
-    def get_info(self):
-        print("Year:", self.year)
-        print("City:", self.city)
-        print("Size:", self.size)
-        print("Material:", self.material)
-
-class School(Building):
-     def __init__(self, pupils, classes, year, city, size, material):
-        super(School, self).__init__(year, city, size, material)
-        self.pupils = pupils
-        self.classes = classes
-
-    def get_info(self):
-        super(School, self).get_info()
-        print("Pupils:", self.pupils, "Classes:", self.classes)
-</div>
-
-<hr>
-    <h2>ссылки url</h2>
-
-<div class="prior1">
-import webbrowser - импорт модуля
-
-def open_url(url): - функция с принятием данных как url
-    webbrowser.open(url)
-
-open_url("https://EmilNRZS.github.io") - открытие сайта по назначеному url
-</div>
-
-<div class="prior2"># URL с проверкой на точность являеться ли он ссылкой</div>
-<div class="prior1">
-import webbrowser
-
-def validator(func):
-    def wrapper(url):
-        if "." in url:
-            func(url)
-        else:
-            print("Invalid URL")
-    return wrapper
-
-@validator
-
-def open_url(url):
-    webbrowser.open(url)
-
-open_url("https://EmilNRZS.github.io")
-</div>
-    </pre>
+<div id="progress"></div>
+
+<!-- SIDEBAR -->
+<aside id="sidebar">
+  <div class="sidebar-logo">
+    <h1>Python</h1>
+    <span>Полный справочник</span>
   </div>
+  <input id="search-box" type="text" placeholder="Поиск...">
+  <nav id="sidebar-nav">
+    <a href="#types"       class="active"><span class="nav-icon">🔢</span>Типы данных</a>
+    <a href="#strings"            ><span class="nav-icon">📝</span>Строки</a>
+    <a href="#lists"              ><span class="nav-icon">📋</span>Список</a>
+    <a href="#tuples"             ><span class="nav-icon">🔒</span>Кортеж</a>
+    <a href="#sets"               ><span class="nav-icon">🔵</span>Множество</a>
+    <a href="#dicts"              ><span class="nav-icon">📚</span>Словарь</a>
+    <a href="#comprehensions"     ><span class="nav-icon">⚡</span>Компрехеншены</a>
+    <a href="#control"            ><span class="nav-icon">🔀</span>Условия</a>
+    <a href="#loops"              ><span class="nav-icon">🔄</span>Циклы</a>
+    <a href="#functions"          ><span class="nav-icon">🧩</span>Функции</a>
+    <a href="#exceptions"         ><span class="nav-icon">🚨</span>Исключения</a>
+    <a href="#files"              ><span class="nav-icon">📁</span>Файлы</a>
+    <a href="#oop"                ><span class="nav-icon">🏗️</span>ООП</a>
+    <a href="#generators"         ><span class="nav-icon">♾️</span>Генераторы</a>
+    <a href="#builtins"           ><span class="nav-icon">🛠️</span>Встроенные</a>
+    <a href="#modules"            ><span class="nav-icon">📦</span>Модули</a>
+  </nav>
+</aside>
 
+<!-- MAIN -->
+<main id="main">
+
+  <!-- ═══════════════ TYPES ═══════════════ -->
+  <section class="section" id="types">
+    <div class="section-header">
+      <span class="section-icon">🔢</span>
+      <h2>Типы данных и переменные</h2>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">Основные типы</div>
+      <table>
+        <tr><th>Тип</th><th>Пример</th><th>Описание</th></tr>
+        <tr><td>int</td><td><code>x = 42</code></td><td>Целое число</td></tr>
+        <tr><td>float</td><td><code>x = 3.14</code></td><td>Число с плавающей точкой</td></tr>
+        <tr><td>complex</td><td><code>x = 2+3j</code></td><td>Комплексное число</td></tr>
+        <tr><td>str</td><td><code>x = "hello"</code></td><td>Строка</td></tr>
+        <tr><td>bool</td><td><code>x = True</code></td><td>Булево значение</td></tr>
+        <tr><td>NoneType</td><td><code>x = None</code></td><td>Отсутствие значения</td></tr>
+        <tr><td>list</td><td><code>x = [1, 2]</code></td><td>Изменяемый список</td></tr>
+        <tr><td>tuple</td><td><code>x = (1, 2)</code></td><td>Неизменяемый кортеж</td></tr>
+        <tr><td>set</td><td><code>x = {1, 2}</code></td><td>Множество уникальных</td></tr>
+        <tr><td>dict</td><td><code>x = {"k": 1}</code></td><td>Словарь ключ-значение</td></tr>
+      </table>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">Преобразование типов</div>
+      <div class="code-block">
+        <button class="copy-btn">copy</button>
+        <pre><span class="fn">int</span>(<span class="str">"42"</span>)          <span class="cmt"># → 42</span>
+<span class="fn">float</span>(<span class="str">"3.14"</span>)       <span class="cmt"># → 3.14</span>
+<span class="fn">str</span>(<span class="num">100</span>)            <span class="cmt"># → "100"</span>
+<span class="fn">bool</span>(<span class="num">0</span>)             <span class="cmt"># → False  (0, None, [], {}, "" — все False)</span>
+<span class="fn">list</span>((<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>))    <span class="cmt"># → [1, 2, 3]</span>
+<span class="fn">tuple</span>([<span class="num">1</span>, <span class="num">2</span>])      <span class="cmt"># → (1, 2)</span>
+<span class="fn">set</span>([<span class="num">1</span>, <span class="num">1</span>, <span class="num">2</span>])     <span class="cmt"># → {1, 2}  (дубликаты убраны)</span>
+<span class="fn">type</span>(x)            <span class="cmt"># узнать тип переменной</span>
+<span class="fn">isinstance</span>(x, <span class="fn">int</span>) <span class="cmt"># проверить тип → True/False</span></pre>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">Операторы</div>
+      <div class="grid2">
+        <div class="code-block">
+          <button class="copy-btn">copy</button>
+          <pre><span class="cmt"># Математика</span>
+<span class="num">7</span> <span class="op">+</span> <span class="num">2</span>    <span class="cmt"># 9</span>
+<span class="num">7</span> <span class="op">-</span> <span class="num">2</span>    <span class="cmt"># 5</span>
+<span class="num">7</span> <span class="op">*</span> <span class="num">2</span>    <span class="cmt"># 14</span>
+<span class="num">7</span> <span class="op">/</span> <span class="num">2</span>    <span class="cmt"># 3.5  (всегда float)</span>
+<span class="num">7</span> <span class="op">//</span> <span class="num">2</span>   <span class="cmt"># 3    (целочисленное деление)</span>
+<span class="num">7</span> <span class="op">%</span> <span class="num">2</span>    <span class="cmt"># 1    (остаток)</span>
+<span class="num">2</span> <span class="op">**</span> <span class="num">8</span>   <span class="cmt"># 256  (степень)</span></pre>
+        </div>
+        <div class="code-block">
+          <button class="copy-btn">copy</button>
+          <pre><span class="cmt"># Сравнение и логика</span>
+x <span class="op">==</span> y   <span class="cmt"># равно</span>
+x <span class="op">!=</span> y   <span class="cmt"># не равно</span>
+x <span class="op">&gt;</span> y    <span class="cmt"># больше</span>
+x <span class="op">&lt;</span> y    <span class="cmt"># меньше</span>
+x <span class="op">and</span> y  <span class="cmt"># оба True</span>
+x <span class="op">or</span> y   <span class="cmt"># хотя бы одно True</span>
+<span class="op">not</span> x    <span class="cmt"># инверсия</span>
+x <span class="op">is</span> y   <span class="cmt"># один и тот же объект?</span>
+x <span class="op">in</span> y   <span class="cmt"># x содержится в y?</span></pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">Множественное присваивание</div>
+      <div class="code-block">
+        <button class="copy-btn">copy</button>
+        <pre>a, b, c <span class="op">=</span> <span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>      <span class="cmt"># a=1, b=2, c=3</span>
+a, b <span class="op">=</span> b, a            <span class="cmt"># поменять местами (swap)</span>
+first, <span class="op">*</span>rest <span class="op">=</span> [<span class="num">1</span>,<span class="num">2</span>,<span class="num">3</span>,<span class="num">4</span>]  <span class="cmt"># first=1, rest=[2,3,4]</span>
+<span class="op">*</span>init, last <span class="op">=</span> [<span class="num">1</span>,<span class="num">2</span>,<span class="num">3</span>,<span class="num">4</span>]  <span class="cmt"># init=[1,2,3], last=4</span>
+x <span class="op">+=</span> <span class="num">1</span>                 <span class="cmt"># сокращение x = x + 1</span>
+x <span class="op">:=</span> expr              <span class="cmt"># walrus — присвоить и вернуть (Python 3.8+)</span></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ STRINGS ═══════════════ -->
+  <section class="section" id="strings">
+    <div class="section-header">
+      <span class="section-icon">📝</span>
+      <h2>Строки</h2>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">Создание и форматирование</div>
+      <div class="code-block">
+        <button class="copy-btn">copy</button>
+        <pre>s <span class="op">=</span> <span class="str">"Hello"</span>
+s <span class="op">=</span> <span class="str">'World'</span>
+s <span class="op">=</span> <span class="str">"""Многострочная
+строка"""</span>
+s <span class="op">=</span> <span class="str">r"C:\Users\test"</span>   <span class="cmt"># raw-строка: \ не экранирует</span>
+
+name <span class="op">=</span> <span class="str">"Маша"</span>
+age  <span class="op">=</span> <span class="num">20</span>
+
+<span class="cmt"># f-строка (самый удобный способ)</span>
+s <span class="op">=</span> <span class="str">f"Привет, {name}! Тебе {age} лет."</span>
+s <span class="op">=</span> <span class="str">f"{age * 2 = }"</span>          <span class="cmt"># age * 2 = 40  (дебаг-формат)</span>
+s <span class="op">=</span> <span class="str">f"{3.14159:.2f}"</span>          <span class="cmt"># "3.14"  — 2 знака после точки</span>
+s <span class="op">=</span> <span class="str">f"{1000000:,}"</span>            <span class="cmt"># "1,000,000" — разделитель тысяч</span>
+s <span class="op">=</span> <span class="str">f"{'left':<span class="op">&lt;</span>10}"</span>            <span class="cmt"># "left      " — выравнивание</span>
+
+<span class="cmt"># Старые способы (реже нужны)</span>
+s <span class="op">=</span> <span class="str">"Привет, {}!"</span>.<span class="fn">format</span>(name)
+s <span class="op">=</span> <span class="str">"Привет, %s!"</span> <span class="op">%</span> name</pre>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">Срезы (slicing)</div>
+      <div class="code-block">
+        <button class="copy-btn">copy</button>
+        <pre>s <span class="op">=</span> <span class="str">"Hello, World!"</span>
+s[<span class="num">0</span>]         <span class="cmt"># "H"       — первый символ</span>
+s[<span class="op">-</span><span class="num">1</span>]        <span class="cmt"># "!"       — последний</span>
+s[<span class="num">0</span>:<span class="num">5</span>]       <span class="cmt"># "Hello"   — с 0 по 4</span>
+s[<span class="num">7</span>:]        <span class="cmt"># "World!"  — с 7 до конца</span>
+s[:<span class="num">5</span>]        <span class="cmt"># "Hello"   — до 5 не включая</span>
+s[::<span class="num">2</span>]       <span class="cmt"># "Hlo ol!" — каждый 2-й</span>
+s[::<span class="op">-</span><span class="num">1</span>]      <span class="cmt"># "!dlroW ,olleH" — задом наперёд</span></pre>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">Методы строк</div>
+      <table>
+        <tr><th>Метод</th><th>Что делает</th></tr>
+        <tr><td><code>.upper()</code></td><td>Все буквы заглавными → <code>"HELLO"</code></td></tr>
+        <tr><td><code>.lower()</code></td><td>Все буквы строчными → <code>"hello"</code></td></tr>
+        <tr><td><code>.title()</code></td><td>Первая буква каждого слова заглавная</td></tr>
+        <tr><td><code>.strip()</code></td><td>Убрать пробелы с обоих концов</td></tr>
+        <tr><td><code>.lstrip() / .rstrip()</code></td><td>Слева / справа</td></tr>
+        <tr><td><code>.replace(old, new)</code></td><td>Заменить подстроку</td></tr>
+        <tr><td><code>.split(sep)</code></td><td>Разбить строку по разделителю → список</td></tr>
+        <tr><td><code>.join(list)</code></td><td>Склеить список строк в одну</td></tr>
+        <tr><td><code>.find(sub)</code></td><td>Индекс первого вхождения, -1 если нет</td></tr>
+        <tr><td><code>.index(sub)</code></td><td>Как find, но бросает исключение если нет</td></tr>
+        <tr><td><code>.count(sub)</code></td><td>Сколько раз встречается подстрока</td></tr>
+        <tr><td><code>.startswith(s)</code></td><td>Начинается ли строка с s → bool</td></tr>
+        <tr><td><code>.endswith(s)</code></td><td>Заканчивается ли строка на s → bool</td></tr>
+        <tr><td><code>.isdigit()</code></td><td>Только цифры? → bool</td></tr>
+        <tr><td><code>.isalpha()</code></td><td>Только буквы? → bool</td></tr>
+        <tr><td><code>.zfill(n)</code></td><td>Дополнить нулями слева до длины n</td></tr>
+        <tr><td><code>.center(n, char)</code></td><td>Выровнять по центру в поле шириной n</td></tr>
+      </table>
+      <div class="code-block" style="margin-top:10px">
+        <button class="copy-btn">copy</button>
+        <pre><span class="str">", "</span>.<span class="fn">join</span>([<span class="str">"a"</span>, <span class="str">"b"</span>, <span class="str">"c"</span>])   <span class="cmt"># "a, b, c"</span>
+<span class="str">"hello world"</span>.<span class="fn">split</span>()        <span class="cmt"># ["hello", "world"]</span>
+<span class="str">"  hello  "</span>.<span class="fn">strip</span>()          <span class="cmt"># "hello"</span>
+<span class="str">"abc"</span>.<span class="fn">replace</span>(<span class="str">"b"</span>, <span class="str">"X"</span>)       <span class="cmt"># "aXc"</span>
+<span class="str">"42"</span>.<span class="fn">zfill</span>(<span class="num">5</span>)               <span class="cmt"># "00042"</span></pre>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">Спецсимволы в строках</div>
+      <table>
+        <tr><th>Символ</th><th>Значение</th></tr>
+        <tr><td><code>\n</code></td><td>Новая строка</td></tr>
+        <tr><td><code>\t</code></td><td>Табуляция</td></tr>
+        <tr><td><code>\\</code></td><td>Обратный слеш</td></tr>
+        <tr><td><code>\"</code></td><td>Кавычка внутри строки</td></tr>
+        <tr><td><code>\r</code></td><td>Возврат каретки</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══════════════ LISTS ═══════════════ -->
+  <section class="section" id="lists">
+    <div class="section-header">
+      <span class="section-icon">📋</span>
+      <h2>Список (list)</h2>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">Создание и доступ</div>
+      <div class="code-block">
+        <button class="copy-btn">copy</button>
+        <pre>nums <span class="op">=</span> [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>, <span class="num">5</span>]
+mixed <span class="op">=</span> [<span class="num">1</span>, <span class="str">"hello"</span>, <span class="num">3.14</span>, <span class="cls">True</span>]  <span class="cmt"># можно разные типы</span>
+nested <span class="op">=</span> [[<span class="num">1</span>,<span class="num">2</span>], [<span class="num">3</span>,<span class="num">4</span>]]             <span class="cmt"># вложенный список</span>
+
+nums[<span class="num">0</span>]       <span class="cmt"># 1    — первый элемент</span>
+nums[<span class="op">-</span><span class="num">1</span>]      <span class="cmt"># 5    — последний</span>
+nums[<span class="num">1</span>:<span class="num">3</span>]     <span class="cmt"># [2, 3] — срез</span>
+nested[<span class="num">0</span>][<span class="num">1</span>]  <span class="cmt"># 2    — доступ в вложенный</span>
+<span class="num">3</span> <span class="op">in</span> nums     <span class="cmt"># True — проверить вхождение</span></pre>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">Методы списка</div>
+      <table>
+        <tr><th>Метод</th><th>Что делает</th></tr>
+        <tr><td><code>.append(x)</code></td><td>Добавить x в конец</td></tr>
+        <tr><td><code>.insert(i, x)</code></td><td>Вставить x на позицию i</td></tr>
+        <tr><td><code>.extend(iter)</code></td><td>Добавить все элементы из другого итерируемого</td></tr>
+        <tr><td><code>.pop(i=-1)</code></td><td>Удалить и вернуть элемент по индексу (по умолчанию последний)</td></tr>
+        <tr><td><code>.remove(x)</code></td><td>Удалить первое вхождение x по значению</td></tr>
+        <tr><td><code>.index(x)</code></td><td>Найти индекс первого вхождения x</td></tr>
+        <tr><td><code>.count(x)</code></td><td>Сколько раз встречается x</td></tr>
+        <tr><td><code>.sort()</code></td><td>Сортировать на месте (изменяет сам список)</td></tr>
+        <tr><td><code>.reverse()</code></td><td>Перевернуть на месте</td></tr>
+        <tr><td><code>.copy()</code></td><td>Поверхностная копия списка</td></tr>
+        <tr><td><code>.clear()</code></td><td>Очистить список</td></tr>
+        <tr><td><code>len(lst)</code></td><td>Количество элементов</td></tr>
+      </table>
+      <div class="code-block" style="margin-top:10px">
+        <button class="copy-btn">copy</button>
+        <pre>lst <span class="op">=</span> [<span class="num">3</span>, <span class="num">1</span>, <span class="num">4</span>, <span class="num">1</span>, <span class="num">5</span>]
+lst.<span class="fn">sort</span>()                   <span class="cmt"># [1, 1, 3, 4, 5]</span>
+lst.<span class="fn">sort</span>(reverse<span class="op">=</span><span class="cls">True</span>)      <span class="cmt"># [5, 4, 3, 1, 1]</span>
+<span class="fn">sorted</span>(lst)                  <span class="cmt"># возвращает НОВЫЙ отсортированный список</span>
+<span class="fn">sorted</span>(lst, key<span class="op">=</span><span class="fn">len</span>)         <span class="cmt"># сортировать по длине (для строк)</span>
+lst <span class="op">+</span> [<span class="num">6</span>, <span class="num">7</span>]                  <span class="cmt"># объединить два списка</span>
+lst <span class="op">*</span> <span class="num">3</span>                       <span class="cmt"># повторить список 3 раза</span>
+<span class="fn">list</span>(<span class="fn">range</span>(<span class="num">5</span>))               <span class="cmt"># [0, 1, 2, 3, 4]</span></pre>
+      </div>
+    </div>
+
+    <div class="note">Отличие <code>sort()</code> от <code>sorted()</code>: sort() меняет оригинал, sorted() возвращает новый список не трогая оригинал.</div>
+  </section>
+
+  <!-- ═══════════════ TUPLES ═══════════════ -->
+  <section class="section" id="tuples">
+    <div class="section-header">
+      <span class="section-icon">🔒</span>
+      <h2>Кортеж (tuple)</h2>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">Создание</div>
+      <div class="code-block">
+        <button class="copy-btn">copy</button>
+        <pre>t <span class="op">=</span> (<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>)          <span class="cmt"># обычный кортеж</span>
+t <span class="op">=</span> <span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>            <span class="cmt"># скобки можно опустить</span>
+t <span class="op">=</span> (<span class="num">42</span>,)               <span class="cmt"># кортеж из одного элемента — запятая обязательна!</span>
+t <span class="op">=</span> <span class="fn">tuple</span>([<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>])   <span class="cmt"># из списка</span>
+
+t[<span class="num">0</span>]                   <span class="cmt"># 1 — чтение по индексу</span>
+a, b, c <span class="op">=</span> t            <span class="cmt"># распаковка</span>
+x, <span class="op">*</span>rest <span class="op">=</span> t           <span class="cmt"># x=1, rest=[2,3]</span>
+
+t.<span class="fn">count</span>(<span class="num">2</span>)             <span class="cmt"># сколько раз встречается 2</span>
+t.<span class="fn">index</span>(<span class="num">3</span>)             <span class="cmt"># индекс первого вхождения 3</span>
+<span class="fn">len</span>(t)                 <span class="cmt"># длина</span></pre>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">frozenset — неизменяемое множество</div>
+      <div class="code-block">
+        <button class="copy-btn">copy</button>
+        <pre>fs <span class="op">=</span> <span class="fn">frozenset</span>([<span class="num">1</span>, <span class="num">2</span>, <span class="num">2</span>, <span class="num">3</span>])  <span class="cmt"># frozenset({1, 2, 3})</span>
+<span class="cmt"># Нельзя: add, remove, clear</span>
+<span class="cmt"># Можно использовать как ключ словаря (в отличие от set)</span></pre>
+      </div>
+    </div>
+    <div class="note">Кортежи быстрее списков и защищены от случайного изменения. Используй их для данных, которые не должны меняться.</div>
+  </section>
+
+  <!-- ═══════════════ SETS ═══════════════ -->
+  <section class="section" id="sets">
+    <div class="section-header">
+      <span class="section-icon">🔵</span>
+      <h2>Множество (set)</h2>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">Создание и методы</div>
+      <div class="code-block">
+        <button class="copy-btn">copy</button>
+        <pre>s <span class="op">=</span> {<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>}          <span class="cmt"># создание</span>
+s <span class="op">=</span> <span class="fn">set</span>()               <span class="cmt"># пустое множество (НЕ {}! это словарь)</span>
+s <span class="op">=</span> <span class="fn">set</span>([<span class="num">1</span>,<span class="num">1</span>,<span class="num">2</span>,<span class="num">3</span>])      <span class="cmt"># {1, 2, 3} — дубли убраны</span>
+
+s.<span class="fn">add</span>(<span class="num">4</span>)               <span class="cmt"># добавить элемент</span>
+s.<span class="fn">update</span>([<span class="num">5</span>, <span class="num">6</span>])       <span class="cmt"># добавить несколько</span>
+s.<span class="fn">remove</span>(<span class="num">2</span>)            <span class="cmt"># удалить (KeyError если нет)</span>
+s.<span class="fn">discard</span>(<span class="num">2</span>)           <span class="cmt"># удалить (НЕТ ошибки если нет)</span>
+s.<span class="fn">pop</span>()                <span class="cmt"># удалить и вернуть произвольный</span>
+s.<span class="fn">clear</span>()              <span class="cmt"># очистить</span>
+
+<span class="num">3</span> <span class="op">in</span> s                  <span class="cmt"># проверить вхождение O(1) — быстро!</span></pre>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">Операции над множествами</div>
+      <div class="code-block">
+        <button class="copy-btn">copy</button>
+        <pre>a <span class="op">=</span> {<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>}
+b <span class="op">=</span> {<span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>}
+
+a <span class="op">|</span> b        <span class="cmt"># {1,2,3,4}  — объединение (union)</span>
+a <span class="op">&amp;</span> b        <span class="cmt"># {2,3}      — пересечение (intersection)</span>
+a <span class="op">-</span> b        <span class="cmt"># {1}        — разность (difference)</span>
+a <span class="op">^</span> b        <span class="cmt"># {1,4}      — симметричная разность</span>
+a.<span class="fn">issubset</span>(b)   <span class="cmt"># a ⊆ b ?</span>
+a.<span class="fn">issuperset</span>(b) <span class="cmt"># a ⊇ b ?</span></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ DICTS ═══════════════ -->
+  <section class="section" id="dicts">
+    <div class="section-header">
+      <span class="section-icon">📚</span>
+      <h2>Словарь (dict)</h2>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">Создание</div>
+      <div class="code-block">
+        <button class="copy-btn">copy</button>
+        <pre>d <span class="op">=</span> {<span class="str">"name"</span>: <span class="str">"Маша"</span>, <span class="str">"age"</span>: <span class="num">20</span>}
+d <span class="op">=</span> <span class="fn">dict</span>(name<span class="op">=</span><span class="str">"Маша"</span>, age<span class="op">=</span><span class="num">20</span>)       <span class="cmt"># то же самое</span>
+d <span class="op">=</span> <span class="fn">dict</span>.<span class="fn">fromkeys</span>([<span class="str">"a"</span>,<span class="str">"b"</span>], <span class="num">0</span>)    <span class="cmt"># {"a":0, "b":0}</span>
+nested <span class="op">=</span> {<span class="str">"user"</span>: {<span class="str">"id"</span>: <span class="num">1</span>, <span class="str">"role"</span>: <span class="str">"admin"</span>}}</pre>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">Чтение и изменение</div>
+      <div class="code-block">
+        <button class="copy-btn">copy</button>
+        <pre>d[<span class="str">"name"</span>]               <span class="cmt"># "Маша"  — KeyError если ключа нет</span>
+d.<span class="fn">get</span>(<span class="str">"name"</span>)           <span class="cmt"># "Маша"  — None если ключа нет</span>
+d.<span class="fn">get</span>(<span class="str">"x"</span>, <span class="str">"default"</span>)  <span class="cmt"># "default" если нет ключа</span>
+
+d[<span class="str">"age"</span>] <span class="op">=</span> <span class="num">21</span>           <span class="cmt"># обновить / добавить</span>
+d.<span class="fn">update</span>({<span class="str">"city"</span>: <span class="str">"Москва"</span>})   <span class="cmt"># обновить несколько</span>
+d.<span class="fn">setdefault</span>(<span class="str">"score"</span>, <span class="num">0</span>)    <span class="cmt"># добавить если ключа нет</span>
+
+d.<span class="fn">pop</span>(<span class="str">"age"</span>)            <span class="cmt"># удалить и вернуть значение</span>
+d.<span class="fn">popitem</span>()             <span class="cmt"># удалить последний добавленный</span>
+<span class="kw">del</span> d[<span class="str">"name"</span>]           <span class="cmt"># удалить по ключу</span>
+d.<span class="fn">clear</span>()               <span class="cmt"># очистить</span></pre>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">Итерация</div>
+      <div class="code-block">
+        <button class="copy-btn">copy</button>
+        <pre>d.<span class="fn">keys</span>()       <span class="cmt"># все ключи</span>
+d.<span class="fn">values</span>()     <span class="cmt"># все значения</span>
+d.<span class="fn">items</span>()      <span class="cmt"># пары (ключ, значение)</span>
+
+<span class="kw">for</span> key <span class="op">in</span> d:
+    <span class="fn">print</span>(key, d[key])
+
+<span class="kw">for</span> key, value <span class="op">in</span> d.<span class="fn">items</span>():   <span class="cmt"># удобнее</span>
+    <span class="fn">print</span>(key, value)
+
+<span class="cmt"># Объединить два словаря (Python 3.9+)</span>
+merged <span class="op">=</span> dict1 <span class="op">|</span> dict2
+dict1 <span class="op">|=</span> dict2   <span class="cmt"># dict1 обновится</span></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ COMPREHENSIONS ═══════════════ -->
+  <section class="section" id="comprehensions">
+    <div class="section-header">
+      <span class="section-icon">⚡</span>
+      <h2>Компрехеншены (comprehensions)</h2>
+    </div>
+
+    <div class="desc">Короткая запись для создания коллекций из итерируемых объектов.</div>
+
+    <div class="entry">
+      <div class="entry-title">List comprehension <span class="tag">ЧАСТО</span></div>
+      <div class="code-block">
+        <button class="copy-btn">copy</button>
+        <pre><span class="cmt"># [выражение for элемент in итерируемое if условие]</span>
+
+squares <span class="op">=</span> [x<span class="op">**</span><span class="num">2</span> <span class="kw">for</span> x <span class="op">in</span> <span class="fn">range</span>(<span class="num">10</span>)]
+<span class="cmt"># [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]</span>
+
+evens <span class="op">=</span> [x <span class="kw">for</span> x <span class="op">in</span> <span class="fn">range</span>(<span class="num">20</span>) <span class="kw">if</span> x <span class="op">%</span> <span class="num">2</span> <span class="op">==</span> <span class="num">0</span>]
+<span class="cmt"># [0, 2, 4, 6, 8, 10, 12, 14, 16, 18]</span>
+
+upper <span class="op">=</span> [s.<span class="fn">upper</span>() <span class="kw">for</span> s <span class="op">in</span> [<span class="str">"hello"</span>, <span class="str">"world"</span>]]
+<span class="cmt"># ["HELLO", "WORLD"]</span>
+
+<span class="cmt"># Вложенный компрехеншен</span>
+flat <span class="op">=</span> [x <span class="kw">for</span> row <span class="op">in</span> [[<span class="num">1</span>,<span class="num">2</span>],[<span class="num">3</span>,<span class="num">4</span>]] <span class="kw">for</span> x <span class="op">in</span> row]
+<span class="cmt"># [1, 2, 3, 4]</span>
+
+<span class="cmt"># if/else внутри выражения</span>
+labels <span class="op">=</span> [<span class="str">"even"</span> <span class="kw">if</span> x<span class="op">%</span><span class="num">2</span><span class="op">==</span><span class="num">0</span> <span class="kw">else</span> <span class="str">"odd"</span> <span class="kw">for</span> x <span class="op">in</span> <span class="fn">range</span>(<span class="num">5</span>)]
+<span class="cmt"># ["even","odd","even","odd","even"]</span></pre>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">Dict comprehension</div>
+      <div class="code-block">
+        <button class="copy-btn">copy</button>
+        <pre>squares <span class="op">=</span> {x: x<span class="op">**</span><span class="num">2</span> <span class="kw">for</span> x <span class="op">in</span> <span class="fn">range</span>(<span class="num">5</span>)}
+<span class="cmt"># {0: 0, 1: 1, 2: 4, 3: 9, 4: 16}</span>
+
+<span class="cmt"># Перевернуть словарь (значения → ключи)</span>
+inv <span class="op">=</span> {v: k <span class="kw">for</span> k, v <span class="op">in</span> d.<span class="fn">items</span>()}
+
+<span class="cmt"># Только нужные ключи</span>
+filtered <span class="op">=</span> {k: v <span class="kw">for</span> k, v <span class="op">in</span> d.<span class="fn">items</span>() <span class="kw">if</span> v <span class="op">&gt;</span> <span class="num">10</span>}</pre>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">Set comprehension и Generator expression</div>
+      <div class="code-block">
+        <button class="copy-btn">copy</button>
+        <pre><span class="cmt"># Set comprehension — фигурные скобки</span>
+unique_lens <span class="op">=</span> {<span class="fn">len</span>(w) <span class="kw">for</span> w <span class="op">in</span> [<span class="str">"hi"</span>, <span class="str">"hello"</span>, <span class="str">"hey"</span>]}
+<span class="cmt"># {2, 3, 5}</span>
+
+<span class="cmt"># Generator expression — круглые скобки, не хранит всё в памяти</span>
+gen <span class="op">=</span> (x<span class="op">**</span><span class="num">2</span> <span class="kw">for</span> x <span class="op">in</span> <span class="fn">range</span>(<span class="num">1000000</span>))  <span class="cmt"># не создаёт список!</span>
+total <span class="op">=</span> <span class="fn">sum</span>(x<span class="op">**</span><span class="num">2</span> <span class="kw">for</span> x <span class="op">in</span> <span class="fn">range</span>(<span class="num">100</span>))</pre>
+      </div>
+    </div>
+    <div class="note">Generator expression экономит память при работе с большими данными — вычисляет по одному элементу, а не хранит всё сразу.</div>
+  </section>
+
+  <!-- ═══════════════ CONTROL ═══════════════ -->
+  <section class="section" id="control">
+    <div class="section-header">
+      <span class="section-icon">🔀</span>
+      <h2>Условия</h2>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">if / elif / else</div>
+      <div class="code-block">
+        <button class="copy-btn">copy</button>
+        <pre>x <span class="op">=</span> <span class="num">15</span>
+
+<span class="kw">if</span> x <span class="op">&gt;</span> <span class="num">10</span>:
+    <span class="fn">print</span>(<span class="str">"больше 10"</span>)
+<span class="kw">elif</span> x <span class="op">==</span> <span class="num">10</span>:
+    <span class="fn">print</span>(<span class="str">"равно 10"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="str">"меньше 10"</span>)
+
+<span class="cmt"># Тернарный оператор (inline if)</span>
+result <span class="op">=</span> <span class="str">"big"</span> <span class="kw">if</span> x <span class="op">&gt;</span> <span class="num">10</span> <span class="kw">else</span> <span class="str">"small"</span>
+
+<span class="cmt"># Несколько условий</span>
+<span class="kw">if</span> <span class="num">0</span> <span class="op">&lt;</span> x <span class="op">&lt;</span> <span class="num">100</span>:   <span class="cmt"># цепочка сравнений — только в Python!</span>
+    <span class="fn">print</span>(<span class="str">"в диапазоне"</span>)
+
+<span class="kw">if</span> x <span class="op">&gt;</span> <span class="num">0</span> <span class="op">and</span> x <span class="op">%</span> <span class="num">2</span> <span class="op">==</span> <span class="num">0</span>:
+    <span class="fn">print</span>(<span class="str">"положительное чётное"</span>)</pre>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">match / case (Python 3.10+) — аналог switch</div>
+      <div class="code-block">
+        <button class="copy-btn">copy</button>
+        <pre>command <span class="op">=</span> <span class="str">"quit"</span>
+
+<span class="kw">match</span> command:
+    <span class="kw">case</span> <span class="str">"quit"</span>:
+        <span class="fn">print</span>(<span class="str">"Выход"</span>)
+    <span class="kw">case</span> <span class="str">"start"</span> <span class="op">|</span> <span class="str">"go"</span>:     <span class="cmt"># несколько значений</span>
+        <span class="fn">print</span>(<span class="str">"Старт"</span>)
+    <span class="kw">case</span> <span class="fn">int</span>(x) <span class="kw">if</span> x <span class="op">&gt;</span> <span class="num">0</span>:   <span class="cmt"># с условием</span>
+        <span class="fn">print</span>(<span class="str">f"Положительное число: {x}"</span>)
+    <span class="kw">case</span> _:                  <span class="cmt"># default</span>
+        <span class="fn">print</span>(<span class="str">"Неизвестная команда"</span>)</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ LOOPS ═══════════════ -->
+  <section class="section" id="loops">
+    <div class="section-header">
+      <span class="section-icon">🔄</span>
+      <h2>Циклы</h2>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">for</div>
+      <div class="code-block">
+        <button class="copy-btn">copy</button>
+        <pre><span class="kw">for</span> i <span class="op">in</span> <span class="fn">range</span>(<span class="num">5</span>):           <span class="cmt"># 0, 1, 2, 3, 4</span>
+    <span class="fn">print</span>(i)
+
+<span class="kw">for</span> i <span class="op">in</span> <span class="fn">range</span>(<span class="num">2</span>, <span class="num">10</span>, <span class="num">2</span>):    <span class="cmt"># 2, 4, 6, 8</span>
+    <span class="fn">print</span>(i)
+
+<span class="kw">for</span> item <span class="op">in</span> [<span class="str">"a"</span>, <span class="str">"b"</span>, <span class="str">"c"</span>]:
+    <span class="fn">print</span>(item)
+
+<span class="cmt"># enumerate — получить индекс и значение</span>
+<span class="kw">for</span> i, val <span class="op">in</span> <span class="fn">enumerate</span>([<span class="str">"x"</span>, <span class="str">"y"</span>], start<span class="op">=</span><span class="num">1</span>):
+    <span class="fn">print</span>(i, val)   <span class="cmt"># 1 x, 2 y</span>
+
+<span class="cmt"># zip — параллельный проход по двум спискам</span>
+<span class="kw">for</span> a, b <span class="op">in</span> <span class="fn">zip</span>([<span class="num">1</span>,<span class="num">2</span>], [<span class="str">"a"</span>,<span class="str">"b"</span>]):
+    <span class="fn">print</span>(a, b)   <span class="cmt"># 1 a, 2 b</span>
+
+<span class="cmt"># else в цикле — выполняется если break НЕ сработал</span>
+<span class="kw">for</span> i <span class="op">in</span> <span class="fn">range</span>(<span class="num">5</span>):
+    <span class="kw">if</span> i <span class="op">==</span> <span class="num">3</span>: <span class="kw">break</span>
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="str">"цикл завершился без break"</span>)</pre>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">while + break / continue</div>
+      <div class="code-block">
+        <button class="copy-btn">copy</button>
+        <pre>n <span class="op">=</span> <span class="num">0</span>
+<span class="kw">while</span> n <span class="op">&lt;</span> <span class="num">5</span>:
+    <span class="fn">print</span>(n)
+    n <span class="op">+=</span> <span class="num">1</span>
+
+<span class="kw">while</span> <span class="cls">True</span>:       <span class="cmt"># бесконечный цикл — выход через break</span>
+    answer <span class="op">=</span> <span class="fn">input</span>(<span class="str">"Ввод: "</span>)
+    <span class="kw">if</span> answer <span class="op">==</span> <span class="str">"exit"</span>:
+        <span class="kw">break</span>      <span class="cmt"># выйти из цикла</span>
+    <span class="kw">if</span> answer <span class="op">==</span> <span class="str">""</span>:
+        <span class="kw">continue</span>   <span class="cmt"># пропустить итерацию</span>
+    <span class="fn">print</span>(answer)</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ FUNCTIONS ═══════════════ -->
+  <section class="section" id="functions">
+    <div class="section-header">
+      <span class="section-icon">🧩</span>
+      <h2>Функции</h2>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">Определение и вызов</div>
+      <div class="code-block">
+        <button class="copy-btn">copy</button>
+        <pre><span class="kw">def</span> <span class="fn">greet</span>(name, greeting<span class="op">=</span><span class="str">"Привет"</span>):   <span class="cmt"># параметр по умолчанию</span>
+    <span class="str">"""Docstring — описание функции."""</span>
+    <span class="kw">return</span> <span class="str">f"{greeting}, {name}!"</span>
+
+<span class="fn">greet</span>(<span class="str">"Маша"</span>)                  <span class="cmt"># "Привет, Маша!"</span>
+<span class="fn">greet</span>(<span class="str">"Маша"</span>, <span class="str">"Здравствуй"</span>)     <span class="cmt"># "Здравствуй, Маша!"</span>
+<span class="fn">greet</span>(name<span class="op">=</span><span class="str">"Маша"</span>)             <span class="cmt"># именованный аргумент</span>
+
+<span class="cmt"># Несколько возвращаемых значений</span>
+<span class="kw">def</span> <span class="fn">minmax</span>(lst):
+    <span class="kw">return</span> <span class="fn">min</span>(lst), <span class="fn">max</span>(lst)  <span class="cmt"># возвращает кортеж</span>
+
+lo, hi <span class="op">=</span> <span class="fn">minmax</span>([<span class="num">3</span>,<span class="num">1</span>,<span class="num">4</span>])</pre>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">*args и **kwargs</div>
+      <div class="code-block">
+        <button class="copy-btn">copy</button>
+        <pre><span class="kw">def</span> <span class="fn">total</span>(<span class="op">*</span>args):           <span class="cmt"># args — кортеж всех позиционных</span>
+    <span class="kw">return</span> <span class="fn">sum</span>(args)
+
+<span class="fn">total</span>(<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>)             <span class="cmt"># 10</span>
+
+<span class="kw">def</span> <span class="fn">info</span>(<span class="op">**</span>kwargs):          <span class="cmt"># kwargs — словарь именованных</span>
+    <span class="kw">for</span> k, v <span class="op">in</span> kwargs.<span class="fn">items</span>():
+        <span class="fn">print</span>(<span class="str">f"{k} = {v}"</span>)
+
+<span class="fn">info</span>(name<span class="op">=</span><span class="str">"Маша"</span>, age<span class="op">=</span><span class="num">20</span>)
+
+<span class="cmt"># Распаковка при вызове</span>
+args <span class="op">=</span> [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>]
+<span class="fn">total</span>(<span class="op">*</span>args)   <span class="cmt"># = total(1, 2, 3)</span>
+d <span class="op">=</span> {<span class="str">"name"</span>: <span class="str">"Маша"</span>}
+<span class="fn">info</span>(<span class="op">**</span>d)      <span class="cmt"># = info(name="Маша")</span></pre>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">Lambda — анонимная функция</div>
+      <div class="code-block">
+        <button class="copy-btn">copy</button>
+        <pre>square <span class="op">=</span> <span class="kw">lambda</span> x: x <span class="op">**</span> <span class="num">2</span>
+square(<span class="num">5</span>)    <span class="cmt"># 25</span>
+
+add <span class="op">=</span> <span class="kw">lambda</span> x, y: x <span class="op">+</span> y
+add(<span class="num">3</span>, <span class="num">4</span>)    <span class="cmt"># 7</span>
+
+<span class="cmt"># Часто используют с sorted, map, filter</span>
+words <span class="op">=</span> [<span class="str">"banana"</span>, <span class="str">"apple"</span>, <span class="str">"cherry"</span>]
+<span class="fn">sorted</span>(words, key<span class="op">=</span><span class="kw">lambda</span> w: <span class="fn">len</span>(w))   <span class="cmt"># по длине</span>
+
+nums <span class="op">=</span> [<span class="num">1</span>,<span class="num">2</span>,<span class="num">3</span>,<span class="num">4</span>,<span class="num">5</span>]
+<span class="fn">list</span>(<span class="fn">filter</span>(<span class="kw">lambda</span> x: x<span class="op">%</span><span class="num">2</span><span class="op">==</span><span class="num">0</span>, nums))  <span class="cmt"># [2, 4]</span>
+<span class="fn">list</span>(<span class="fn">map</span>(<span class="kw">lambda</span> x: x<span class="op">*</span><span class="num">2</span>, nums))        <span class="cmt"># [2,4,6,8,10]</span></pre>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">Декораторы <span class="tag tip">продвинутое</span></div>
+      <div class="desc">Декоратор — функция, которая принимает другую функцию и добавляет к ней поведение.</div>
+      <div class="code-block">
+        <button class="copy-btn">copy</button>
+        <pre><span class="kw">def</span> <span class="fn">logger</span>(func):
+    <span class="kw">def</span> <span class="fn">wrapper</span>(<span class="op">*</span>args, <span class="op">**</span>kwargs):
+        <span class="fn">print</span>(<span class="str">f"Вызов {func.__name__}"</span>)
+        result <span class="op">=</span> <span class="fn">func</span>(<span class="op">*</span>args, <span class="op">**</span>kwargs)
+        <span class="fn">print</span>(<span class="str">f"Готово, результат: {result}"</span>)
+        <span class="kw">return</span> result
+    <span class="kw">return</span> wrapper
+
+<span class="op">@</span><span class="fn">logger</span>                   <span class="cmt"># синтаксический сахар для greet = logger(greet)</span>
+<span class="kw">def</span> <span class="fn">greet</span>(name):
+    <span class="kw">return</span> <span class="str">f"Привет, {name}!"</span>
+
+<span class="fn">greet</span>(<span class="str">"Маша"</span>)
+<span class="cmt"># Вызов greet</span>
+<span class="cmt"># Готово, результат: Привет, Маша!</span></pre>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">Type hints — аннотации типов (Python 3.5+)</div>
+      <div class="code-block">
+        <button class="copy-btn">copy</button>
+        <pre><span class="kw">def</span> <span class="fn">add</span>(a: <span class="fn">int</span>, b: <span class="fn">int</span>) <span class="op">-&gt;</span> <span class="fn">int</span>:
+    <span class="kw">return</span> a <span class="op">+</span> b
+
+<span class="kw">def</span> <span class="fn">greet</span>(name: <span class="fn">str</span>, times: <span class="fn">int</span> <span class="op">=</span> <span class="num">1</span>) <span class="op">-&gt;</span> <span class="fn">str</span>:
+    <span class="kw">return</span> name <span class="op">*</span> times
+
+<span class="kw">from</span> typing <span class="kw">import</span> <span class="cls">Optional</span>, <span class="cls">List</span>, <span class="cls">Union</span>
+<span class="kw">def</span> <span class="fn">foo</span>(x: <span class="cls">Optional</span>[<span class="fn">int</span>] <span class="op">=</span> <span class="cls">None</span>) <span class="op">-&gt;</span> <span class="cls">List</span>[<span class="fn">str</span>]: ...</pre>
+      </div>
+      <div class="note">Аннотации — только для читаемости и IDE. Python их не проверяет в рантайме.</div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ EXCEPTIONS ═══════════════ -->
+  <section class="section" id="exceptions">
+    <div class="section-header">
+      <span class="section-icon">🚨</span>
+      <h2>Исключения (try / except)</h2>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">Базовая структура</div>
+      <div class="code-block">
+        <button class="copy-btn">copy</button>
+        <pre><span class="kw">try</span>:
+    x <span class="op">=</span> <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Число: "</span>))
+    result <span class="op">=</span> <span class="num">100</span> <span class="op">/</span> x
+<span class="kw">except</span> <span class="cls">ValueError</span>:
+    <span class="fn">print</span>(<span class="str">"Введи число, а не текст!"</span>)
+<span class="kw">except</span> <span class="cls">ZeroDivisionError</span>:
+    <span class="fn">print</span>(<span class="str">"На ноль нельзя!"</span>)
+<span class="kw">except</span> (<span class="cls">TypeError</span>, <span class="cls">RuntimeError</span>) <span class="kw">as</span> e:  <span class="cmt"># несколько + захват</span>
+    <span class="fn">print</span>(<span class="str">f"Ошибка: {e}"</span>)
+<span class="kw">except</span> <span class="cls">Exception</span> <span class="kw">as</span> e:       <span class="cmt"># любое исключение</span>
+    <span class="fn">print</span>(<span class="str">f"Что-то пошло не так: {e}"</span>)
+<span class="kw">else</span>:                         <span class="cmt"># если исключений НЕ было</span>
+    <span class="fn">print</span>(<span class="str">f"Результат: {result}"</span>)
+<span class="kw">finally</span>:                      <span class="cmt"># выполняется ВСЕГДА</span>
+    <span class="fn">print</span>(<span class="str">"Блок выполнен"</span>)</pre>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">Часто встречаемые исключения</div>
+      <table>
+        <tr><th>Исключение</th><th>Когда возникает</th></tr>
+        <tr><td><code>ValueError</code></td><td>Неправильный тип значения (<code>int("abc")</code>)</td></tr>
+        <tr><td><code>TypeError</code></td><td>Несовместимые типы (<code>"a" + 1</code>)</td></tr>
+        <tr><td><code>ZeroDivisionError</code></td><td>Деление на ноль</td></tr>
+        <tr><td><code>IndexError</code></td><td>Индекс вне диапазона списка</td></tr>
+        <tr><td><code>KeyError</code></td><td>Ключ не найден в словаре</td></tr>
+        <tr><td><code>AttributeError</code></td><td>Атрибут не существует у объекта</td></tr>
+        <tr><td><code>FileNotFoundError</code></td><td>Файл не найден</td></tr>
+        <tr><td><code>ImportError</code></td><td>Модуль не найден</td></tr>
+        <tr><td><code>StopIteration</code></td><td>Итератор исчерпан</td></tr>
+        <tr><td><code>PermissionError</code></td><td>Нет прав на файл/действие</td></tr>
+      </table>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">Своё исключение + raise</div>
+      <div class="code-block">
+        <button class="copy-btn">copy</button>
+        <pre><span class="kw">raise</span> <span class="cls">ValueError</span>(<span class="str">"Неправильное значение"</span>)   <span class="cmt"># бросить исключение</span>
+<span class="kw">raise</span>                                         <span class="cmt"># перебросить текущее</span>
+
+<span class="cmt"># Собственный класс исключений</span>
+<span class="kw">class</span> <span class="cls">AgeError</span>(<span class="cls">ValueError</span>):
+    <span class="kw">pass</span>
+
+<span class="kw">def</span> <span class="fn">check_age</span>(age):
+    <span class="kw">if</span> age <span class="op">&lt;</span> <span class="num">0</span>:
+        <span class="kw">raise</span> <span class="cls">AgeError</span>(<span class="str">f"Возраст {age} не может быть отрицательным"</span>)</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ FILES ═══════════════ -->
+  <section class="section" id="files">
+    <div class="section-header">
+      <span class="section-icon">📁</span>
+      <h2>Файлы</h2>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">Открытие и чтение</div>
+      <div class="code-block">
+        <button class="copy-btn">copy</button>
+        <pre><span class="cmt"># with — автоматически закрывает файл</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="str">"file.txt"</span>, <span class="str">"r"</span>, encoding<span class="op">=</span><span class="str">"utf-8"</span>) <span class="kw">as</span> f:
+    content <span class="op">=</span> f.<span class="fn">read</span>()          <span class="cmt"># всё содержимое строкой</span>
+    lines   <span class="op">=</span> f.<span class="fn">readlines</span>()    <span class="cmt"># список строк</span>
+    line    <span class="op">=</span> f.<span class="fn">readline</span>()     <span class="cmt"># одну строку</span>
+
+<span class="cmt"># Построчно без загрузки в память (лучший способ для больших файлов)</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="str">"file.txt"</span>) <span class="kw">as</span> f:
+    <span class="kw">for</span> line <span class="op">in</span> f:
+        <span class="fn">print</span>(line.<span class="fn">strip</span>())</pre>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">Режимы открытия</div>
+      <table>
+        <tr><th>Режим</th><th>Описание</th></tr>
+        <tr><td><code>'r'</code></td><td>Чтение (по умолчанию). Ошибка если файла нет.</td></tr>
+        <tr><td><code>'w'</code></td><td>Запись. Создаёт файл или очищает существующий.</td></tr>
+        <tr><td><code>'a'</code></td><td>Дозапись в конец. Создаёт если нет.</td></tr>
+        <tr><td><code>'x'</code></td><td>Создать новый. Ошибка если уже существует.</td></tr>
+        <tr><td><code>'rb'</code> / <code>'wb'</code></td><td>Бинарный режим чтения/записи</td></tr>
+        <tr><td><code>'r+'</code></td><td>Чтение и запись</td></tr>
+      </table>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">Запись и работа с путями (pathlib)</div>
+      <div class="code-block">
+        <button class="copy-btn">copy</button>
+        <pre><span class="kw">with</span> <span class="fn">open</span>(<span class="str">"out.txt"</span>, <span class="str">"w"</span>, encoding<span class="op">=</span><span class="str">"utf-8"</span>) <span class="kw">as</span> f:
+    f.<span class="fn">write</span>(<span class="str">"Привет\n"</span>)
+    f.<span class="fn">writelines</span>([<span class="str">"строка1\n"</span>, <span class="str">"строка2\n"</span>])
+
+<span class="cmt"># Работа с путями — pathlib (рекомендуется вместо os.path)</span>
+<span class="kw">from</span> pathlib <span class="kw">import</span> <span class="cls">Path</span>
+
+p <span class="op">=</span> <span class="cls">Path</span>(<span class="str">"data/file.txt"</span>)
+p.<span class="fn">exists</span>()           <span class="cmt"># True/False</span>
+p.<span class="fn">parent</span>             <span class="cmt"># Path("data")</span>
+p.<span class="fn">name</span>               <span class="cmt"># "file.txt"</span>
+p.<span class="fn">stem</span>               <span class="cmt"># "file"</span>
+p.<span class="fn">suffix</span>             <span class="cmt"># ".txt"</span>
+p.<span class="fn">read_text</span>()         <span class="cmt"># прочитать как строку</span>
+p.<span class="fn">write_text</span>(<span class="str">"data"</span>) <span class="cmt"># записать строку</span>
+<span class="cls">Path</span>(<span class="str">"newdir"</span>).<span class="fn">mkdir</span>(exist_ok<span class="op">=</span><span class="cls">True</span>)  <span class="cmt"># создать папку</span></pre>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">JSON</div>
+      <div class="code-block">
+        <button class="copy-btn">copy</button>
+        <pre><span class="kw">import</span> json
+
+<span class="cmt"># Сохранить</span>
+data <span class="op">=</span> {<span class="str">"name"</span>: <span class="str">"Маша"</span>, <span class="str">"scores"</span>: [<span class="num">10</span>, <span class="num">20</span>]}
+<span class="kw">with</span> <span class="fn">open</span>(<span class="str">"data.json"</span>, <span class="str">"w"</span>) <span class="kw">as</span> f:
+    json.<span class="fn">dump</span>(data, f, ensure_ascii<span class="op">=</span><span class="cls">False</span>, indent<span class="op">=</span><span class="num">2</span>)
+
+<span class="cmt"># Загрузить</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="str">"data.json"</span>) <span class="kw">as</span> f:
+    loaded <span class="op">=</span> json.<span class="fn">load</span>(f)
+
+<span class="cmt"># Строка ↔ объект</span>
+s <span class="op">=</span> json.<span class="fn">dumps</span>(data)   <span class="cmt"># объект → JSON-строка</span>
+d <span class="op">=</span> json.<span class="fn">loads</span>(s)      <span class="cmt"># JSON-строка → объект</span></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ OOP ═══════════════ -->
+  <section class="section" id="oop">
+    <div class="section-header">
+      <span class="section-icon">🏗️</span>
+      <h2>ООП — Классы</h2>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">Базовый класс</div>
+      <div class="code-block">
+        <button class="copy-btn">copy</button>
+        <pre><span class="kw">class</span> <span class="cls">Person</span>:
+    species <span class="op">=</span> <span class="str">"Homo sapiens"</span>   <span class="cmt"># атрибут класса (общий для всех)</span>
+
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, name: <span class="fn">str</span>, age: <span class="fn">int</span>):   <span class="cmt"># конструктор</span>
+        self.name <span class="op">=</span> name    <span class="cmt"># атрибут экземпляра</span>
+        self.age  <span class="op">=</span> age
+        self._secret <span class="op">=</span> <span class="str">"private"</span>  <span class="cmt"># _ условно приватный</span>
+
+    <span class="kw">def</span> <span class="fn">greet</span>(self) <span class="op">-&gt;</span> <span class="fn">str</span>:       <span class="cmt"># метод экземпляра</span>
+        <span class="kw">return</span> <span class="str">f"Я {self.name}, мне {self.age}"</span>
+
+    <span class="kw">def</span> <span class="fn">__repr__</span>(self):             <span class="cmt"># repr для разработчика</span>
+        <span class="kw">return</span> <span class="str">f"Person({self.name!r}, {self.age})"</span>
+
+    <span class="kw">def</span> <span class="fn">__str__</span>(self):              <span class="cmt"># str для пользователя</span>
+        <span class="kw">return</span> self.name
+
+    <span class="op">@</span><span class="fn">classmethod</span>
+    <span class="kw">def</span> <span class="fn">from_birth_year</span>(cls, name, year):  <span class="cmt"># альтернативный конструктор</span>
+        <span class="kw">return</span> cls(name, <span class="num">2024</span> <span class="op">-</span> year)
+
+    <span class="op">@</span><span class="fn">staticmethod</span>
+    <span class="kw">def</span> <span class="fn">validate_age</span>(age):         <span class="cmt"># не имеет доступа к self/cls</span>
+        <span class="kw">return</span> <span class="num">0</span> <span class="op">&lt;=</span> age <span class="op">&lt;=</span> <span class="num">150</span>
+
+p <span class="op">=</span> <span class="cls">Person</span>(<span class="str">"Маша"</span>, <span class="num">20</span>)
+p.<span class="fn">greet</span>()
+<span class="cls">Person</span>.<span class="fn">from_birth_year</span>(<span class="str">"Ваня"</span>, <span class="num">2000</span>)</pre>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">Наследование</div>
+      <div class="code-block">
+        <button class="copy-btn">copy</button>
+        <pre><span class="kw">class</span> <span class="cls">Student</span>(<span class="cls">Person</span>):       <span class="cmt"># наследует от Person</span>
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, name, age, university):
+        <span class="fn">super</span>().<span class="fn">__init__</span>(name, age)  <span class="cmt"># вызвать __init__ родителя</span>
+        self.university <span class="op">=</span> university
+
+    <span class="kw">def</span> <span class="fn">greet</span>(self):              <span class="cmt"># переопределить метод родителя</span>
+        base <span class="op">=</span> <span class="fn">super</span>().<span class="fn">greet</span>()
+        <span class="kw">return</span> <span class="str">f"{base}, учусь в {self.university}"</span>
+
+s <span class="op">=</span> <span class="cls">Student</span>(<span class="str">"Ваня"</span>, <span class="num">19</span>, <span class="str">"МГУ"</span>)
+<span class="fn">isinstance</span>(s, <span class="cls">Person</span>)    <span class="cmt"># True  — Student это тоже Person</span>
+<span class="fn">issubclass</span>(<span class="cls">Student</span>, <span class="cls">Person</span>) <span class="cmt"># True</span></pre>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">@property — геттер/сеттер</div>
+      <div class="code-block">
+        <button class="copy-btn">copy</button>
+        <pre><span class="kw">class</span> <span class="cls">Circle</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, radius):
+        self._radius <span class="op">=</span> radius
+
+    <span class="op">@</span><span class="fn">property</span>
+    <span class="kw">def</span> <span class="fn">radius</span>(self):           <span class="cmt"># обращаемся как к атрибуту</span>
+        <span class="kw">return</span> self._radius
+
+    <span class="op">@</span>radius.<span class="fn">setter</span>
+    <span class="kw">def</span> <span class="fn">radius</span>(self, value):    <span class="cmt"># с валидацией</span>
+        <span class="kw">if</span> value <span class="op">&lt;</span> <span class="num">0</span>: <span class="kw">raise</span> <span class="cls">ValueError</span>(<span class="str">"Радиус не отрицательный"</span>)
+        self._radius <span class="op">=</span> value
+
+    <span class="op">@</span><span class="fn">property</span>
+    <span class="kw">def</span> <span class="fn">area</span>(self):             <span class="cmt"># вычисляемый атрибут</span>
+        <span class="kw">return</span> <span class="num">3.14159</span> <span class="op">*</span> self._radius <span class="op">**</span> <span class="num">2</span>
+
+c <span class="op">=</span> <span class="cls">Circle</span>(<span class="num">5</span>)
+c.radius     <span class="cmt"># 5</span>
+c.radius <span class="op">=</span> <span class="num">10</span>
+c.area       <span class="cmt"># 314.159</span></pre>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">Магические (dunder) методы</div>
+      <table>
+        <tr><th>Метод</th><th>Когда вызывается</th></tr>
+        <tr><td><code>__init__</code></td><td>Создание объекта</td></tr>
+        <tr><td><code>__str__</code></td><td><code>str(obj)</code>, <code>print(obj)</code></td></tr>
+        <tr><td><code>__repr__</code></td><td>Вывод в REPL, <code>repr(obj)</code></td></tr>
+        <tr><td><code>__len__</code></td><td><code>len(obj)</code></td></tr>
+        <tr><td><code>__eq__</code></td><td><code>obj1 == obj2</code></td></tr>
+        <tr><td><code>__lt__</code></td><td><code>obj1 &lt; obj2</code></td></tr>
+        <tr><td><code>__add__</code></td><td><code>obj1 + obj2</code></td></tr>
+        <tr><td><code>__contains__</code></td><td><code>x in obj</code></td></tr>
+        <tr><td><code>__getitem__</code></td><td><code>obj[key]</code></td></tr>
+        <tr><td><code>__iter__</code></td><td><code>for x in obj</code></td></tr>
+        <tr><td><code>__enter__ / __exit__</code></td><td><code>with obj as ...</code></td></tr>
+      </table>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">dataclass — быстрое создание классов данных (Python 3.7+)</div>
+      <div class="code-block">
+        <button class="copy-btn">copy</button>
+        <pre><span class="kw">from</span> dataclasses <span class="kw">import</span> dataclass, field
+
+<span class="op">@</span>dataclass
+<span class="kw">class</span> <span class="cls">Point</span>:
+    x: <span class="fn">float</span>
+    y: <span class="fn">float</span>
+    label: <span class="fn">str</span> <span class="op">=</span> <span class="str">"origin"</span>          <span class="cmt"># значение по умолчанию</span>
+    tags: <span class="fn">list</span> <span class="op">=</span> <span class="fn">field</span>(default_factory<span class="op">=</span>list)  <span class="cmt"># изменяемое значение</span>
+
+p <span class="op">=</span> <span class="cls">Point</span>(<span class="num">1.0</span>, <span class="num">2.0</span>)   <span class="cmt"># __init__, __repr__, __eq__ — автоматически</span>
+
+<span class="op">@</span>dataclass(frozen<span class="op">=</span><span class="cls">True</span>)  <span class="cmt"># неизменяемый, hashable</span>
+<span class="kw">class</span> <span class="cls">ImmutablePoint</span>:
+    x: <span class="fn">float</span>; y: <span class="fn">float</span></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ GENERATORS ═══════════════ -->
+  <section class="section" id="generators">
+    <div class="section-header">
+      <span class="section-icon">♾️</span>
+      <h2>Генераторы и итераторы</h2>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">Функция-генератор (yield)</div>
+      <div class="desc">Генератор вычисляет значения лениво — по одному при каждом вызове next(). Экономит память.</div>
+      <div class="code-block">
+        <button class="copy-btn">copy</button>
+        <pre><span class="kw">def</span> <span class="fn">countdown</span>(n):
+    <span class="kw">while</span> n <span class="op">&gt;</span> <span class="num">0</span>:
+        <span class="kw">yield</span> n      <span class="cmt"># приостановить и вернуть n</span>
+        n <span class="op">-=</span> <span class="num">1</span>
+
+<span class="kw">for</span> x <span class="op">in</span> <span class="fn">countdown</span>(<span class="num">5</span>):
+    <span class="fn">print</span>(x)   <span class="cmt"># 5, 4, 3, 2, 1</span>
+
+<span class="cmt"># Бесконечный генератор</span>
+<span class="kw">def</span> <span class="fn">integers</span>(start<span class="op">=</span><span class="num">0</span>):
+    <span class="kw">while</span> <span class="cls">True</span>:
+        <span class="kw">yield</span> start
+        start <span class="op">+=</span> <span class="num">1</span>
+
+gen <span class="op">=</span> <span class="fn">integers</span>()
+<span class="fn">next</span>(gen)   <span class="cmt"># 0</span>
+<span class="fn">next</span>(gen)   <span class="cmt"># 1</span></pre>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">itertools — мощные утилиты</div>
+      <div class="code-block">
+        <button class="copy-btn">copy</button>
+        <pre><span class="kw">import</span> itertools <span class="kw">as</span> it
+
+<span class="fn">list</span>(it.<span class="fn">chain</span>([<span class="num">1</span>,<span class="num">2</span>], [<span class="num">3</span>,<span class="num">4</span>]))    <span class="cmt"># [1,2,3,4] — объединить</span>
+<span class="fn">list</span>(it.<span class="fn">islice</span>(gen, <span class="num">5</span>))          <span class="cmt"># взять 5 из генератора</span>
+<span class="fn">list</span>(it.<span class="fn">product</span>(<span class="str">"AB"</span>, <span class="fn">range</span>(<span class="num">2</span>))) <span class="cmt"># декартово произведение</span>
+<span class="fn">list</span>(it.<span class="fn">combinations</span>([<span class="num">1</span>,<span class="num">2</span>,<span class="num">3</span>], <span class="num">2</span>))<span class="cmt"># [(1,2),(1,3),(2,3)]</span>
+<span class="fn">list</span>(it.<span class="fn">permutations</span>([<span class="num">1</span>,<span class="num">2</span>,<span class="num">3</span>]))  <span class="cmt"># все перестановки</span>
+it.<span class="fn">count</span>(<span class="num">10</span>, <span class="num">2</span>)                  <span class="cmt"># 10, 12, 14, ... (бесконечно)</span>
+it.<span class="fn">cycle</span>([<span class="str">"a"</span>,<span class="str">"b"</span>])             <span class="cmt"># a b a b a ... (бесконечно)</span>
+it.<span class="fn">repeat</span>(<span class="str">"x"</span>, <span class="num">3</span>)               <span class="cmt"># x x x</span>
+it.<span class="fn">groupby</span>(data, key<span class="op">=</span>func)      <span class="cmt"># группировать по ключу</span></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ BUILTINS ═══════════════ -->
+  <section class="section" id="builtins">
+    <div class="section-header">
+      <span class="section-icon">🛠️</span>
+      <h2>Встроенные функции</h2>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">Самые используемые</div>
+      <table>
+        <tr><th>Функция</th><th>Описание и пример</th></tr>
+        <tr><td><code>print(*args, sep, end)</code></td><td>Вывод. <code>print(1,2, sep="-")</code> → <code>1-2</code></td></tr>
+        <tr><td><code>input(prompt)</code></td><td>Получить строку от пользователя</td></tr>
+        <tr><td><code>len(x)</code></td><td>Длина строки / списка / словаря</td></tr>
+        <tr><td><code>range(start,stop,step)</code></td><td>Диапазон чисел</td></tr>
+        <tr><td><code>enumerate(iter, start=0)</code></td><td>Пары (индекс, значение)</td></tr>
+        <tr><td><code>zip(*iters)</code></td><td>Пары из нескольких итерируемых</td></tr>
+        <tr><td><code>map(func, iter)</code></td><td>Применить func к каждому</td></tr>
+        <tr><td><code>filter(func, iter)</code></td><td>Оставить только True-элементы</td></tr>
+        <tr><td><code>sorted(iter, key, reverse)</code></td><td>Новый отсортированный список</td></tr>
+        <tr><td><code>reversed(iter)</code></td><td>Итератор в обратном порядке</td></tr>
+        <tr><td><code>sum(iter, start=0)</code></td><td>Сумма</td></tr>
+        <tr><td><code>min(iter)</code> / <code>max(iter)</code></td><td>Минимум / максимум</td></tr>
+        <tr><td><code>abs(x)</code></td><td>Модуль числа</td></tr>
+        <tr><td><code>round(x, n)</code></td><td>Округление до n знаков</td></tr>
+        <tr><td><code>pow(x, y, mod)</code></td><td>x**y (с опциональным mod)</td></tr>
+        <tr><td><code>divmod(x, y)</code></td><td>Кортеж (частное, остаток)</td></tr>
+        <tr><td><code>any(iter)</code></td><td>True если хотя бы один True</td></tr>
+        <tr><td><code>all(iter)</code></td><td>True если все True</td></tr>
+        <tr><td><code>isinstance(obj, type)</code></td><td>Проверить тип</td></tr>
+        <tr><td><code>hasattr(obj, name)</code></td><td>Есть ли атрибут у объекта?</td></tr>
+        <tr><td><code>getattr(obj, name, default)</code></td><td>Получить атрибут по имени</td></tr>
+        <tr><td><code>vars(obj)</code></td><td>Атрибуты объекта как словарь</td></tr>
+        <tr><td><code>dir(obj)</code></td><td>Все атрибуты и методы объекта</td></tr>
+        <tr><td><code>id(obj)</code></td><td>Уникальный идентификатор объекта в памяти</td></tr>
+        <tr><td><code>hash(obj)</code></td><td>Хеш объекта</td></tr>
+        <tr><td><code>open(path, mode)</code></td><td>Открыть файл</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══════════════ MODULES ═══════════════ -->
+  <section class="section" id="modules">
+    <div class="section-header">
+      <span class="section-icon">📦</span>
+      <h2>Модули</h2>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">Импорт</div>
+      <div class="code-block">
+        <button class="copy-btn">copy</button>
+        <pre><span class="kw">import</span> math                        <span class="cmt"># весь модуль</span>
+<span class="kw">import</span> math <span class="kw">as</span> m                   <span class="cmt"># с псевдонимом</span>
+<span class="kw">from</span> math <span class="kw">import</span> sqrt, pi          <span class="cmt"># конкретные функции</span>
+<span class="kw">from</span> math <span class="kw">import</span> <span class="op">*</span>                 <span class="cmt"># всё (не рекомендуется)</span></pre>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">math</div>
+      <div class="code-block">
+        <button class="copy-btn">copy</button>
+        <pre><span class="kw">import</span> math
+math.sqrt(<span class="num">16</span>)      <span class="cmt"># 4.0</span>
+math.pi             <span class="cmt"># 3.141592...</span>
+math.e              <span class="cmt"># 2.718281...</span>
+math.<span class="fn">floor</span>(<span class="num">3.7</span>)   <span class="cmt"># 3</span>
+math.<span class="fn">ceil</span>(<span class="num">3.2</span>)    <span class="cmt"># 4</span>
+math.<span class="fn">log</span>(<span class="num">100</span>, <span class="num">10</span>) <span class="cmt"># 2.0</span>
+math.<span class="fn">sin</span>(math.pi)  <span class="cmt"># ~0</span>
+math.<span class="fn">factorial</span>(<span class="num">5</span>) <span class="cmt"># 120</span>
+math.<span class="fn">gcd</span>(<span class="num">12</span>, <span class="num">8</span>)   <span class="cmt"># 4</span>
+math.<span class="fn">inf</span>           <span class="cmt"># бесконечность</span></pre>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">random</div>
+      <div class="code-block">
+        <button class="copy-btn">copy</button>
+        <pre><span class="kw">import</span> random
+random.<span class="fn">random</span>()              <span class="cmt"># float в [0.0, 1.0)</span>
+random.<span class="fn">randint</span>(<span class="num">1</span>, <span class="num">6</span>)         <span class="cmt"># случайное целое 1–6</span>
+random.<span class="fn">choice</span>([<span class="str">"a"</span>,<span class="str">"b"</span>,<span class="str">"c"</span>]) <span class="cmt"># случайный элемент</span>
+random.<span class="fn">choices</span>(lst, k<span class="op">=</span><span class="num">3</span>)     <span class="cmt"># k случайных (с повторами)</span>
+random.<span class="fn">sample</span>(lst, k<span class="op">=</span><span class="num">3</span>)     <span class="cmt"># k случайных (без повторов)</span>
+random.<span class="fn">shuffle</span>(lst)          <span class="cmt"># перемешать список на месте</span>
+random.<span class="fn">uniform</span>(<span class="num">1.0</span>, <span class="num">5.0</span>)    <span class="cmt"># float в диапазоне</span>
+random.<span class="fn">seed</span>(<span class="num">42</span>)              <span class="cmt"># фиксировать для воспроизводимости</span></pre>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">datetime</div>
+      <div class="code-block">
+        <button class="copy-btn">copy</button>
+        <pre><span class="kw">from</span> datetime <span class="kw">import</span> datetime, date, timedelta
+
+now <span class="op">=</span> datetime.<span class="fn">now</span>()         <span class="cmt"># текущие дата и время</span>
+today <span class="op">=</span> date.<span class="fn">today</span>()         <span class="cmt"># только дата</span>
+d <span class="op">=</span> datetime(<span class="num">2024</span>, <span class="num">1</span>, <span class="num">15</span>)    <span class="cmt"># конкретная дата</span>
+
+now.<span class="fn">strftime</span>(<span class="str">"%d.%m.%Y %H:%M"</span>)  <span class="cmt"># "15.01.2024 14:30"</span>
+datetime.<span class="fn">strptime</span>(<span class="str">"15.01.2024"</span>, <span class="str">"%d.%m.%Y"</span>)  <span class="cmt"># строка → datetime</span>
+
+delta <span class="op">=</span> timedelta(days<span class="op">=</span><span class="num">7</span>)
+next_week <span class="op">=</span> today <span class="op">+</span> delta
+diff <span class="op">=</span> (d <span class="op">-</span> today).days        <span class="cmt"># разница в днях</span></pre>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">os и sys</div>
+      <div class="code-block">
+        <button class="copy-btn">copy</button>
+        <pre><span class="kw">import</span> os, sys
+
+os.<span class="fn">getcwd</span>()                    <span class="cmt"># текущая директория</span>
+os.<span class="fn">chdir</span>(<span class="str">"/path"</span>)              <span class="cmt"># сменить директорию</span>
+os.<span class="fn">listdir</span>(<span class="str">"."</span>)               <span class="cmt"># список файлов</span>
+os.<span class="fn">makedirs</span>(<span class="str">"a/b/c"</span>, exist_ok<span class="op">=</span><span class="cls">True</span>)  <span class="cmt"># создать вложенные папки</span>
+os.<span class="fn">remove</span>(<span class="str">"file.txt"</span>)          <span class="cmt"># удалить файл</span>
+os.<span class="fn">rename</span>(<span class="str">"old"</span>, <span class="str">"new"</span>)        <span class="cmt"># переименовать</span>
+os.path.<span class="fn">join</span>(<span class="str">"dir"</span>, <span class="str">"file.txt"</span>) <span class="cmt"># правильный путь</span>
+os.path.<span class="fn">exists</span>(<span class="str">"file"</span>)         <span class="cmt"># существует ли?</span>
+os.<span class="fn">environ</span>.<span class="fn">get</span>(<span class="str">"HOME"</span>)         <span class="cmt"># переменная окружения</span>
+
+sys.argv                       <span class="cmt"># аргументы командной строки</span>
+sys.<span class="fn">exit</span>(<span class="num">0</span>)                    <span class="cmt"># выйти из программы</span>
+sys.version                    <span class="cmt"># версия Python</span></pre>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">re — регулярные выражения</div>
+      <div class="code-block">
+        <button class="copy-btn">copy</button>
+        <pre><span class="kw">import</span> re
+
+re.<span class="fn">search</span>(<span class="str">r"\d+"</span>, <span class="str">"abc123"</span>)       <span class="cmt"># найти первое совпадение</span>
+re.<span class="fn">match</span>(<span class="str">r"\d+"</span>, <span class="str">"123abc"</span>)         <span class="cmt"># совпадение С НАЧАЛА строки</span>
+re.<span class="fn">findall</span>(<span class="str">r"\d+"</span>, <span class="str">"a1b2c3"</span>)      <span class="cmt"># ["1","2","3"]</span>
+re.<span class="fn">sub</span>(<span class="str">r"\s+"</span>, <span class="str">"-"</span>, <span class="str">"a b  c"</span>)    <span class="cmt"># "a-b-c" замена</span>
+re.<span class="fn">split</span>(<span class="str">r"[,;]"</span>, <span class="str">"a,b;c"</span>)        <span class="cmt"># ["a","b","c"]</span>
+
+<span class="cmt"># Скомпилировать для многократного использования</span>
+pattern <span class="op">=</span> re.<span class="fn">compile</span>(<span class="str">r"(\w+)@(\w+)\.(\w+)"</span>)
+m <span class="op">=</span> pattern.<span class="fn">search</span>(<span class="str">"mail@example.com"</span>)
+m.<span class="fn">group</span>(<span class="num">0</span>)  <span class="cmt"># "mail@example.com"</span>
+m.<span class="fn">groups</span>()  <span class="cmt"># ("mail","example","com")</span></pre>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">collections</div>
+      <div class="code-block">
+        <button class="copy-btn">copy</button>
+        <pre><span class="kw">from</span> collections <span class="kw">import</span> Counter, defaultdict, deque, OrderedDict, namedtuple
+
+<span class="cmt"># Counter — подсчёт элементов</span>
+c <span class="op">=</span> <span class="cls">Counter</span>([<span class="str">"a"</span>,<span class="str">"b"</span>,<span class="str">"a"</span>,<span class="str">"c"</span>,<span class="str">"a"</span>])
+c  <span class="cmt"># Counter({"a":3,"b":1,"c":1})</span>
+c.<span class="fn">most_common</span>(<span class="num">2</span>)  <span class="cmt"># [("a",3),("b",1)]</span>
+
+<span class="cmt"># defaultdict — словарь с дефолтным значением</span>
+dd <span class="op">=</span> <span class="cls">defaultdict</span>(<span class="fn">list</span>)
+dd[<span class="str">"key"</span>].<span class="fn">append</span>(<span class="num">1</span>)  <span class="cmt"># не надо проверять наличие ключа</span>
+
+<span class="cmt"># deque — двусторонняя очередь (быстрее list для append/pop с обоих концов)</span>
+dq <span class="op">=</span> <span class="cls">deque</span>([<span class="num">1</span>,<span class="num">2</span>,<span class="num">3</span>], maxlen<span class="op">=</span><span class="num">5</span>)
+dq.<span class="fn">appendleft</span>(<span class="num">0</span>)  <span class="cmt"># добавить слева</span>
+dq.<span class="fn">popleft</span>()     <span class="cmt"># удалить слева</span>
+dq.<span class="fn">rotate</span>(<span class="num">1</span>)     <span class="cmt"># сдвинуть</span>
+
+<span class="cmt"># namedtuple — кортеж с именованными полями</span>
+<span class="cls">Point</span> <span class="op">=</span> <span class="fn">namedtuple</span>(<span class="str">"Point"</span>, [<span class="str">"x"</span>, <span class="str">"y"</span>])
+p <span class="op">=</span> <span class="cls">Point</span>(<span class="num">1</span>, <span class="num">2</span>)
+p.x  <span class="cmt"># 1</span></pre>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">functools</div>
+      <div class="code-block">
+        <button class="copy-btn">copy</button>
+        <pre><span class="kw">from</span> functools <span class="kw">import</span> reduce, partial, lru_cache, wraps
+
+<span class="cmt"># reduce — свёртка списка</span>
+<span class="fn">reduce</span>(<span class="kw">lambda</span> a, b: a<span class="op">*</span>b, [<span class="num">1</span>,<span class="num">2</span>,<span class="num">3</span>,<span class="num">4</span>])  <span class="cmt"># 24</span>
+
+<span class="cmt"># partial — зафиксировать аргументы</span>
+double <span class="op">=</span> <span class="fn">partial</span>(<span class="fn">pow</span>, exp<span class="op">=</span><span class="num">2</span>)
+double(<span class="num">5</span>)   <span class="cmt"># 25</span>
+
+<span class="cmt"># lru_cache — мемоизация (кешировать результаты)</span>
+<span class="op">@</span><span class="fn">lru_cache</span>(maxsize<span class="op">=</span><span class="cls">None</span>)
+<span class="kw">def</span> <span class="fn">fib</span>(n):
+    <span class="kw">return</span> n <span class="kw">if</span> n <span class="op">&lt;</span> <span class="num">2</span> <span class="kw">else</span> <span class="fn">fib</span>(n<span class="op">-</span><span class="num">1</span>) <span class="op">+</span> <span class="fn">fib</span>(n<span class="op">-</span><span class="num">2</span>)</pre>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-title">Другие полезные стандартные модули</div>
+      <table>
+        <tr><th>Модуль</th><th>Для чего</th></tr>
+        <tr><td><code>time</code></td><td><code>time.sleep(1)</code>, <code>time.time()</code> — измерение времени</td></tr>
+        <tr><td><code>copy</code></td><td><code>copy.deepcopy(obj)</code> — глубокое копирование</td></tr>
+        <tr><td><code>hashlib</code></td><td>Хеши MD5, SHA256 и т.д.</td></tr>
+        <tr><td><code>uuid</code></td><td><code>uuid.uuid4()</code> — уникальный идентификатор</td></tr>
+        <tr><td><code>csv</code></td><td>Чтение/запись CSV файлов</td></tr>
+        <tr><td><code>subprocess</code></td><td>Запуск внешних команд и процессов</td></tr>
+        <tr><td><code>threading</code></td><td>Многопоточность (для I/O задач)</td></tr>
+        <tr><td><code>multiprocessing</code></td><td>Многопроцессорность (для CPU задач)</td></tr>
+        <tr><td><code>socket</code></td><td>Низкоуровневые сетевые соединения</td></tr>
+        <tr><td><code>argparse</code></td><td>Парсинг аргументов командной строки</td></tr>
+        <tr><td><code>logging</code></td><td>Логирование вместо print()</td></tr>
+        <tr><td><code>unittest</code></td><td>Тестирование кода</td></tr>
+        <tr><td><code>abc</code></td><td>Абстрактные базовые классы</td></tr>
+        <tr><td><code>contextlib</code></td><td>Утилиты для контекстных менеджеров</td></tr>
+        <tr><td><code>typing</code></td><td>Типовые аннотации Optional, List, Union...</td></tr>
+        <tr><td><code>pprint</code></td><td>Красивый вывод сложных структур данных</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <div id="no-results">Ничего не найдено по запросу 🤷</div>
+
+</main>
+
+<button id="back-top" title="Наверх">↑</button>
+
+<script>
+  // ── Copy buttons ──
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const code = btn.nextElementSibling.innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        btn.textContent = 'copied!';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'copy'; btn.classList.remove('copied'); }, 1500);
+      });
+    });
+  });
+
+  // ── Progress bar ──
+  const prog = document.getElementById('progress');
+  window.addEventListener('scroll', () => {
+    const pct = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100;
+    prog.style.width = pct + '%';
+    document.getElementById('back-top').style.display = window.scrollY > 300 ? 'block' : 'none';
+  });
+  document.getElementById('back-top').addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+  // ── Sidebar active link on scroll ──
+  const sections = document.querySelectorAll('.section');
+  const navLinks = document.querySelectorAll('#sidebar-nav a');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id));
+      }
+    });
+  }, { threshold: 0.2 });
+  sections.forEach(s => observer.observe(s));
+
+  // ── Search (sidebar + deduplicate with top if needed) ──
+  function filterSections(query) {
+    const q = query.toLowerCase().trim();
+    let found = 0;
+    sections.forEach(sec => {
+      const text = sec.innerText.toLowerCase();
+      const visible = !q || text.includes(q);
+      sec.style.display = visible ? '' : 'none';
+      if (visible) found++;
+    });
+    document.getElementById('no-results').style.display = found === 0 && q ? 'block' : 'none';
+  }
+  document.getElementById('search-box').addEventListener('input', e => filterSections(e.target.value));
+</script>
 </body>
 </html>
