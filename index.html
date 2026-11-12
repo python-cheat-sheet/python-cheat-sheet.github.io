@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Python Cheat Sheet | Полный интерактивный справочник Python 3.12+</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="description" content="Ультимативная интерактивная шпаргалка по Python: от базовых типов до FastAPI, Django, SQLAlchemy, Pytest, NumPy, Pandas, Asyncio и продвинутых паттернов.">
   <meta name="keywords" content="python cheat sheet, python шпаргалка, fastapi, django, flask, sqlalchemy, pytest, numpy, pandas, asyncio">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,19 +14,44 @@
 <body>
 
 <div id="progress"></div>
-<button id="mobile-toggle" aria-label="Открыть навигацию">☰ Меню</button>
+
+<!-- ═══════════════ MOBILE TOP APP BAR ═══════════════ -->
+<header id="mobile-topbar" aria-label="Панель навигации">
+  <button id="mobile-toggle" class="mobile-toggle-btn" aria-label="Открыть навигацию" aria-expanded="false" aria-controls="sidebar">
+    <span class="mobile-toggle-icon">☰</span>
+    <span id="mobile-toggle-text">Меню</span>
+  </button>
+  <div class="mobile-brand">
+    <span class="mobile-brand-title">Python</span>
+    <span class="badge-ver">v3.12+</span>
+  </div>
+  <div class="lang-switch-wrap mobile-lang-switch" id="mobile-lang-switch" role="group" aria-label="Выбор языка / Language choice">
+    <button type="button" class="lang-btn active" data-lang="ru" title="Русский">🇷🇺 RU</button>
+    <button type="button" class="lang-btn" data-lang="en" title="English">🇬🇧 EN</button>
+  </div>
+</header>
+
+<div id="sidebar-backdrop" aria-hidden="true"></div>
 
 <!-- ═══════════════ SIDEBAR ═══════════════ -->
 <aside id="sidebar">
-  <div class="sidebar-logo">
-    <div class="sidebar-logo-title">
-      <h1>Python</h1>
-      <span class="badge-ver">v3.12+</span>
-    </div>
+  <div class="sidebar-top-sticky">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-header">
+        <div class="sidebar-logo-title">
+          <h1>Python</h1>
+          <span class="badge-ver">v3.12+</span>
+        </div>
+        <button id="sidebar-close-btn" class="sidebar-close-btn" aria-label="Закрыть меню">&times;</button>
+      </div>
     <span class="subtitle">Ultimate Pro Cheat Sheet</span>
     <div class="sidebar-stats">
-      <span>30 Разделов</span>
-      <span>200+ Рецептов</span>
+      <span id="sidebar-stat-sections">30 Разделов</span>
+      <span id="sidebar-stat-recipes">200+ Рецептов</span>
+    </div>
+    <div class="lang-switch-wrap" id="sidebar-lang-switch" role="group" aria-label="Выбор языка / Language choice">
+      <button type="button" class="lang-btn active" data-lang="ru" title="Русский">🇷🇺 RU</button>
+      <button type="button" class="lang-btn" data-lang="en" title="English">🇬🇧 EN</button>
     </div>
   </div>
 
@@ -34,14 +59,15 @@
     <span class="search-icon-pos">🔍</span>
     <input id="sidebar-search" type="text" placeholder="Быстрый поиск (Ctrl+K)..." autocomplete="off" spellcheck="false">
   </div>
+  </div>
 
   <nav id="sidebar-nav">
     <div class="nav-group-title">Основы языка</div><a href="#types" class=" active"><span class="nav-icon">🔢</span>Типы данных</a><a href="#strings" class=""><span class="nav-icon">📝</span>Строки и срезы</a><a href="#control" class=""><span class="nav-icon">🔀</span>Условия & Match</a><a href="#loops" class=""><span class="nav-icon">🔄</span>Циклы</a><a href="#functions" class=""><span class="nav-icon">🧩</span>Функции</a><div class="nav-group-title">Структуры данных</div><a href="#lists" class=""><span class="nav-icon">📋</span>Списки (list)</a><a href="#tuples" class=""><span class="nav-icon">🔒</span>Кортежи (tuple)</a><a href="#sets" class=""><span class="nav-icon">🔵</span>Множества (set)</a><a href="#dicts" class=""><span class="nav-icon">📚</span>Словари (dict)</a><a href="#comprehensions" class=""><span class="nav-icon">⚡</span>Компрехеншены</a><div class="nav-group-title">Продвинутый Python</div><a href="#decorators" class=""><span class="nav-icon">🎭</span>Декораторы</a><a href="#context_managers" class=""><span class="nav-icon">🔐</span>Контекст менеджеры</a><a href="#exceptions" class=""><span class="nav-icon">🚨</span>Исключения</a><a href="#files" class=""><span class="nav-icon">📁</span>Файлы & Pathlib</a><a href="#oop" class=""><span class="nav-icon">🏗️</span>ООП и Классы</a><a href="#typing_pro" class=""><span class="nav-icon">🏷️</span>Типизация (Typing)</a><a href="#asyncio_concurrency" class=""><span class="nav-icon">⚡</span>Asyncio & Потоки</a><a href="#generators" class=""><span class="nav-icon">♾️</span>Генераторы</a><a href="#builtins" class=""><span class="nav-icon">🛠️</span>Встроенные функции</a><a href="#modules" class=""><span class="nav-icon">📦</span>Модули stdlib</a><div class="nav-group-title">Фреймворки и Веб</div><a href="#frameworks_fastapi" class=""><span class="nav-icon">⚡</span>FastAPI (REST API)</a><a href="#frameworks_flask" class=""><span class="nav-icon">🌶️</span>Flask</a><a href="#frameworks_django" class=""><span class="nav-icon">🎸</span>Django ORM & Web</a><a href="#frameworks_http" class=""><span class="nav-icon">🌐</span>Requests & HTTPX</a><div class="nav-group-title">Базы данных и Данные</div><a href="#frameworks_sql" class=""><span class="nav-icon">🗄️</span>SQLAlchemy 2.0</a><a href="#data_science" class=""><span class="nav-icon">📊</span>NumPy & Pandas</a><div class="nav-group-title">Инструменты и DevOps</div><a href="#frameworks_testing" class=""><span class="nav-icon">🧪</span>Pytest тесты</a><a href="#devops_tooling" class=""><span class="nav-icon">🛠️</span>uv, venv, pip</a><a href="#debugging_perf" class=""><span class="nav-icon">🐛</span>Отладка & pdb</a><a href="#best_practices" class=""><span class="nav-icon">🧠</span>Паттерны & Security</a>
   </nav>
   <div class="sidebar-footer">
-    <a href="https://github.com/python-cheat-sheet/python-cheat-sheet.github.io" target="_blank" rel="noopener noreferrer" class="sidebar-github-btn">
+    <a href="https://github.com/python-cheat-sheet/python-cheat-sheet.github.io" target="_blank" rel="noopener noreferrer" class="sidebar-github-btn" id="sidebar-github-link">
       <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
-      GitHub Исходный код
+      <span id="sidebar-github-text">GitHub Исходный код</span>
     </a>
   </div>
 </aside>
@@ -52,18 +78,22 @@
   <!-- HERO HEADER -->
   <header class="hero-banner">
     <div class="hero-title-row">
-      <h1>Python Cheat Sheet</h1>
-      <div class="hero-badges">
-        <span class="pill green">⚡ Python 3.12+ Ready</span>
-        <span class="pill cyan">🚀 FastAPI &amp; Django</span>
-        <span class="pill purple">🧪 Pytest &amp; Tools</span>
-        <a href="https://github.com/python-cheat-sheet/python-cheat-sheet.github.io" target="_blank" rel="noopener noreferrer" class="pill github">
-          <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor" style="vertical-align: -2px;"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
-          GitHub Source
-        </a>
+      <h1 id="hero-title">Python Cheat Sheet</h1>
+      <div class="lang-switch-wrap" id="hero-lang-switch" role="group" aria-label="Выбор языка / Language choice">
+        <button type="button" class="lang-btn active" data-lang="ru" title="Русский">🇷🇺 RU</button>
+        <button type="button" class="lang-btn" data-lang="en" title="English">🇬🇧 EN</button>
       </div>
     </div>
-    <p class="hero-desc">
+    <div class="hero-badges">
+      <span class="pill green" id="hero-badge-version">⚡ Python 3.12+ Ready</span>
+      <span class="pill cyan" id="hero-badge-frameworks">🚀 FastAPI &amp; Django</span>
+      <span class="pill purple" id="hero-badge-tooling">🧪 Pytest &amp; Tools</span>
+      <a href="https://github.com/python-cheat-sheet/python-cheat-sheet.github.io" target="_blank" rel="noopener noreferrer" class="pill github" id="hero-badge-github">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor" style="vertical-align: -2px;"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+        <span id="hero-github-text">GitHub Исходный код</span>
+      </a>
+    </div>
+    <p class="hero-desc" id="hero-desc">
       Интерактивный справочник по языку Python и современной экосистеме разработки: от синтаксиса и ООП до Web-фреймворков, ORM, асинхронности, анализа данных и лучших практик. Копируйте готовый код в один клик.
     </p>
   </header>
@@ -225,7 +255,6 @@ deep <span class="op">=</span> copy.deepcopy(nested_structure)</pre>
   <div class="warn-box">Никогда не используйте изменяемые объекты (списки <code>[]</code>, словари <code>{}</code>) как значения по умолчанию в аргументах функций! Используйте <code>arg=None</code> и создавайте объект внутри.</div>
 </div>
 </section>
-
 <section class="section" id="strings" data-category="core">
   <div class="section-header">
     <div class="section-title-wrap">
@@ -338,7 +367,163 @@ joined <span class="op">=</span> <span class="str">" | "</span>.join(parts)     
   
 </div>
 </section>
+<section class="section" id="control" data-category="core">
+  <div class="section-header">
+    <div class="section-title-wrap">
+      <span class="section-icon">🔀</span>
+      <h2>Условия и Pattern Matching</h2>
+    </div>
+    <span class="section-category-tag">Основы языка</span>
+  </div>
+  <div class="entry">
+  <div class="entry-title">Условные конструкции if / elif / else </div>
+  <div class="desc">Ветвление логики и тернарный оператор.</div>
+  
+  <div class="code-block">
+  <div class="code-header">
+    <span class="code-lang">🐍 python</span>
+    <button class="copy-btn">копировать</button>
+  </div>
+  <pre>status <span class="op">=</span> <span class="num">200</span>
 
+<span class="kw">if</span> status <span class="op">==</span> <span class="num">200</span>:
+    msg <span class="op">=</span> <span class="str">"OK"</span>
+<span class="kw">elif</span> <span class="num">400</span> <span class="op">&lt;=</span> status <span class="op">&lt;</span> <span class="num">500</span>:  <span class="cmt"># Цепочка сравнений (Chained comparisons)</span>
+    msg <span class="op">=</span> <span class="str">"Client Error"</span>
+<span class="kw">else</span>:
+    msg <span class="op">=</span> <span class="str">"Other"</span>
+
+<span class="cmt"># Тернарный оператор (однострочный if)</span>
+label <span class="op">=</span> <span class="str">"доступ разрешен"</span> <span class="kw">if</span> is_admin <span class="kw">else</span> <span class="str">"вход воспрещен"</span></pre>
+</div>
+  
+</div>
+<div class="entry">
+  <div class="entry-title">Сопоставление с шаблоном: match / case (Python 3.10+) <span class="tag pro">PYTHON 3.10+</span></div>
+  <div class="desc">Структурный Pattern Matching. Намного мощнее обычного switch/case из C++/Java.</div>
+  
+  <div class="code-block">
+  <div class="code-header">
+    <span class="code-lang">🐍 python</span>
+    <button class="copy-btn">копировать</button>
+  </div>
+  <pre><span class="kw">def</span> <span class="fn">handle_command</span>(cmd):
+    <span class="kw">match</span> cmd:
+        <span class="kw">case</span> <span class="str">"quit"</span> <span class="op">|</span> <span class="str">"exit"</span>:                 <span class="cmt"># Или через |</span>
+            <span class="fn">print</span>(<span class="str">"Выход из системы"</span>)
+        <span class="kw">case</span> [<span class="str">"move"</span>, (<span class="str">"up"</span> <span class="op">|</span> <span class="str">"down"</span> <span class="kw">as</span> direction), <span class="cls">int</span>(steps)]:
+            <span class="fn">print</span>(<span class="str">f"Движение {direction} на {steps} шагов"</span>)
+        <span class="kw">case</span> {<span class="str">"user"</span>: str(name), <span class="str">"role"</span>: <span class="str">"admin"</span>}:  <span class="cmt"># Деструктуризация словаря</span>
+            <span class="fn">print</span>(<span class="str">f"Приветствуем администратора {name}"</span>)
+        <span class="kw">case</span> <span class="cls">int</span>(x) <span class="kw">if</span> x <span class="op">&gt;</span> <span class="num">0</span>:                 <span class="cmt"># Guard-условие</span>
+            <span class="fn">print</span>(<span class="str">f"Положительное число: {x}"</span>)
+        <span class="kw">case</span> _:                                <span class="cmt"># Дефолтный случай (wildcard)</span>
+            <span class="fn">print</span>(<span class="str">"Команда не распознана"</span>)</pre>
+</div>
+  
+</div>
+</section>
+<section class="section" id="loops" data-category="core">
+  <div class="section-header">
+    <div class="section-title-wrap">
+      <span class="section-icon">🔄</span>
+      <h2>Циклы (loops)</h2>
+    </div>
+    <span class="section-category-tag">Основы языка</span>
+  </div>
+  <div class="entry">
+  <div class="entry-title">Циклы for, while и вспомогательные функции </div>
+  <div class="desc">Итерация по последовательностям и генераторам.</div>
+  
+  <div class="code-block">
+  <div class="code-header">
+    <span class="code-lang">🐍 python</span>
+    <button class="copy-btn">копировать</button>
+  </div>
+  <pre><span class="cmt"># 1. enumerate — индекс и значение</span>
+items <span class="op">=</span> [<span class="str">"первый"</span>, <span class="str">"второй"</span>, <span class="str">"третий"</span>]
+<span class="kw">for</span> i, val <span class="op">in</span> <span class="fn">enumerate</span>(items, start<span class="op">=</span><span class="num">1</span>):
+    <span class="fn">print</span>(<span class="str">f"{i}: {val}"</span>)
+
+<span class="cmt"># 2. zip — параллельная итерация по двум и более коллекциям</span>
+names <span class="op">=</span> [<span class="str">"Анна"</span>, <span class="str">"Борис"</span>]
+scores <span class="op">=</span> [<span class="num">95</span>, <span class="num">88</span>]
+<span class="kw">for</span> name, score <span class="op">in</span> <span class="fn">zip</span>(names, scores):
+    <span class="fn">print</span>(<span class="str">f"{name}: {score}"</span>)
+
+<span class="cmt"># 3. Блок else в циклах (выполняется, ТОЛЬКО если цикл НЕ был прерван через break!)</span>
+<span class="kw">for</span> n <span class="op">in</span> [<span class="num">2</span>, <span class="num">3</span>, <span class="num">5</span>, <span class="num">7</span>]:
+    <span class="kw">if</span> n <span class="op">==</span> target:
+        <span class="fn">print</span>(<span class="str">"Найдено!"</span>)
+        <span class="kw">break</span>
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="str">"Элемент не найден во всем списке"</span>)</pre>
+</div>
+  <div class="note">Блок <code>else</code> после <code>for</code>/<code>while</code> избавляет от необходимости заводить флаги <code>found = False</code> при поиске.</div>
+</div>
+</section>
+<section class="section" id="functions" data-category="core">
+  <div class="section-header">
+    <div class="section-title-wrap">
+      <span class="section-icon">🧩</span>
+      <h2>Функции и Аргументы</h2>
+    </div>
+    <span class="section-category-tag">Основы языка</span>
+  </div>
+  <div class="entry">
+  <div class="entry-title">Аргументы функций: *args, **kwargs, /, * <span class="tag pro">ПРОДВИНУТОЕ</span></div>
+  <div class="desc">Современный синтаксис позиционно-только и ключевых-только аргументов.</div>
+  
+  <div class="code-block">
+  <div class="code-header">
+    <span class="code-lang">🐍 python</span>
+    <button class="copy-btn">копировать</button>
+  </div>
+  <pre><span class="cmt"># / отделяет позиционно-только параметры (нельзя передать name=val)</span>
+<span class="cmt"># * отделяет ключевые-только параметры (ОБЯЗАТЕЛЬНО передавать name=val)</span>
+<span class="kw">def</span> <span class="fn">api_request</span>(url, /, timeout<span class="op">=</span><span class="num">30</span>, <span class="op">*</span>, retry<span class="op">=</span><span class="cls">True</span>, max_retries<span class="op">=</span><span class="num">3</span>):
+    <span class="fn">print</span>(<span class="str">f"Запрос к {url}, retry={retry}"</span>)
+
+<span class="cmt"># Правильный вызов:</span>
+api_request(<span class="str">"https://api.com"</span>, retry<span class="op">=</span><span class="cls">False</span>)
+<span class="cmt"># Ошибка! url нельзя передать как именованный: api_request(url="...")</span>
+
+<span class="cmt"># Универсальная функция с *args и **kwargs</span>
+<span class="kw">def</span> <span class="fn">proxy_call</span>(<span class="op">*</span>args, <span class="op">**</span>kwargs):
+    <span class="cmt"># args — tuple, kwargs — dict</span>
+    target_function(<span class="op">*</span>args, <span class="op">**</span>kwargs)</pre>
+</div>
+  
+</div>
+<div class="entry">
+  <div class="entry-title">Лямбда-функции (lambda) и замыкания </div>
+  <div class="desc">Анонимные функции в одну строку и сохранение лексического контекста.</div>
+  
+  <div class="code-block">
+  <div class="code-header">
+    <span class="code-lang">🐍 python</span>
+    <button class="copy-btn">копировать</button>
+  </div>
+  <pre><span class="cmt"># Лямбда: lambda аргументы: выражение</span>
+add <span class="op">=</span> <span class="kw">lambda</span> x, y: x <span class="op">+</span> y
+add(<span class="num">3</span>, <span class="num">5</span>)  <span class="cmt"># 8</span>
+
+<span class="cmt"># Замыкание (Closure) и ключевое слово nonlocal</span>
+<span class="kw">def</span> <span class="fn">make_counter</span>():
+    count <span class="op">=</span> <span class="num">0</span>
+    <span class="kw">def</span> <span class="fn">increment</span>():
+        <span class="kw">nonlocal</span> count  <span class="cmt"># доступ к переменной внешней функции</span>
+        count <span class="op">+=</span> <span class="num">1</span>
+        <span class="kw">return</span> count
+    <span class="kw">return</span> increment
+
+counter <span class="op">=</span> make_counter()
+<span class="fn">print</span>(counter())  <span class="cmt"># 1</span>
+<span class="fn">print</span>(counter())  <span class="cmt"># 2</span></pre>
+</div>
+  
+</div>
+</section>
 <section class="section" id="lists" data-category="structures">
   <div class="section-header">
     <div class="section-title-wrap">
@@ -436,7 +621,6 @@ merged <span class="op">=</span> [<span class="op">*</span>a, <span class="num">
   
 </div>
 </section>
-
 <section class="section" id="tuples" data-category="structures">
   <div class="section-header">
     <div class="section-title-wrap">
@@ -497,7 +681,6 @@ u <span class="op">=</span> <span class="cls">User</span>(<span class="num">1</s
   
 </div>
 </section>
-
 <section class="section" id="sets" data-category="structures">
   <div class="section-header">
     <div class="section-title-wrap">
@@ -552,7 +735,6 @@ a.isdisjoint({<span class="num">99</span>, <span class="num">100</span>})  <span
   
 </div>
 </section>
-
 <section class="section" id="dicts" data-category="structures">
   <div class="section-header">
     <div class="section-title-wrap">
@@ -617,7 +799,6 @@ c <span class="op">=</span> Counter(words)
   
 </div>
 </section>
-
 <section class="section" id="comprehensions" data-category="structures">
   <div class="section-header">
     <div class="section-title-wrap">
@@ -680,167 +861,6 @@ total_even_sum <span class="op">=</span> <span class="fn">sum</span>(x <span cla
   <div class="note">Если данные нужны только для однократного прохода или подсчета суммы/минимума — всегда используйте генераторные выражения вместо списков.</div>
 </div>
 </section>
-
-<section class="section" id="control" data-category="core">
-  <div class="section-header">
-    <div class="section-title-wrap">
-      <span class="section-icon">🔀</span>
-      <h2>Условия и Pattern Matching</h2>
-    </div>
-    <span class="section-category-tag">Основы языка</span>
-  </div>
-  <div class="entry">
-  <div class="entry-title">Условные конструкции if / elif / else </div>
-  <div class="desc">Ветвление логики и тернарный оператор.</div>
-  
-  <div class="code-block">
-  <div class="code-header">
-    <span class="code-lang">🐍 python</span>
-    <button class="copy-btn">копировать</button>
-  </div>
-  <pre>status <span class="op">=</span> <span class="num">200</span>
-
-<span class="kw">if</span> status <span class="op">==</span> <span class="num">200</span>:
-    msg <span class="op">=</span> <span class="str">"OK"</span>
-<span class="kw">elif</span> <span class="num">400</span> <span class="op">&lt;=</span> status <span class="op">&lt;</span> <span class="num">500</span>:  <span class="cmt"># Цепочка сравнений (Chained comparisons)</span>
-    msg <span class="op">=</span> <span class="str">"Client Error"</span>
-<span class="kw">else</span>:
-    msg <span class="op">=</span> <span class="str">"Other"</span>
-
-<span class="cmt"># Тернарный оператор (однострочный if)</span>
-label <span class="op">=</span> <span class="str">"доступ разрешен"</span> <span class="kw">if</span> is_admin <span class="kw">else</span> <span class="str">"вход воспрещен"</span></pre>
-</div>
-  
-</div>
-<div class="entry">
-  <div class="entry-title">Сопоставление с шаблоном: match / case (Python 3.10+) <span class="tag pro">PYTHON 3.10+</span></div>
-  <div class="desc">Структурный Pattern Matching. Намного мощнее обычного switch/case из C++/Java.</div>
-  
-  <div class="code-block">
-  <div class="code-header">
-    <span class="code-lang">🐍 python</span>
-    <button class="copy-btn">копировать</button>
-  </div>
-  <pre><span class="kw">def</span> <span class="fn">handle_command</span>(cmd):
-    <span class="kw">match</span> cmd:
-        <span class="kw">case</span> <span class="str">"quit"</span> <span class="op">|</span> <span class="str">"exit"</span>:                 <span class="cmt"># Или через |</span>
-            <span class="fn">print</span>(<span class="str">"Выход из системы"</span>)
-        <span class="kw">case</span> [<span class="str">"move"</span>, (<span class="str">"up"</span> <span class="op">|</span> <span class="str">"down"</span> <span class="kw">as</span> direction), <span class="cls">int</span>(steps)]:
-            <span class="fn">print</span>(<span class="str">f"Движение {direction} на {steps} шагов"</span>)
-        <span class="kw">case</span> {<span class="str">"user"</span>: str(name), <span class="str">"role"</span>: <span class="str">"admin"</span>}:  <span class="cmt"># Деструктуризация словаря</span>
-            <span class="fn">print</span>(<span class="str">f"Приветствуем администратора {name}"</span>)
-        <span class="kw">case</span> <span class="cls">int</span>(x) <span class="kw">if</span> x <span class="op">&gt;</span> <span class="num">0</span>:                 <span class="cmt"># Guard-условие</span>
-            <span class="fn">print</span>(<span class="str">f"Положительное число: {x}"</span>)
-        <span class="kw">case</span> _:                                <span class="cmt"># Дефолтный случай (wildcard)</span>
-            <span class="fn">print</span>(<span class="str">"Команда не распознана"</span>)</pre>
-</div>
-  
-</div>
-</section>
-
-<section class="section" id="loops" data-category="core">
-  <div class="section-header">
-    <div class="section-title-wrap">
-      <span class="section-icon">🔄</span>
-      <h2>Циклы (loops)</h2>
-    </div>
-    <span class="section-category-tag">Основы языка</span>
-  </div>
-  <div class="entry">
-  <div class="entry-title">Циклы for, while и вспомогательные функции </div>
-  <div class="desc">Итерация по последовательностям и генераторам.</div>
-  
-  <div class="code-block">
-  <div class="code-header">
-    <span class="code-lang">🐍 python</span>
-    <button class="copy-btn">копировать</button>
-  </div>
-  <pre><span class="cmt"># 1. enumerate — индекс и значение</span>
-items <span class="op">=</span> [<span class="str">"первый"</span>, <span class="str">"второй"</span>, <span class="str">"третий"</span>]
-<span class="kw">for</span> i, val <span class="op">in</span> <span class="fn">enumerate</span>(items, start<span class="op">=</span><span class="num">1</span>):
-    <span class="fn">print</span>(<span class="str">f"{i}: {val}"</span>)
-
-<span class="cmt"># 2. zip — параллельная итерация по двум и более коллекциям</span>
-names <span class="op">=</span> [<span class="str">"Анна"</span>, <span class="str">"Борис"</span>]
-scores <span class="op">=</span> [<span class="num">95</span>, <span class="num">88</span>]
-<span class="kw">for</span> name, score <span class="op">in</span> <span class="fn">zip</span>(names, scores):
-    <span class="fn">print</span>(<span class="str">f"{name}: {score}"</span>)
-
-<span class="cmt"># 3. Блок else в циклах (выполняется, ТОЛЬКО если цикл НЕ был прерван через break!)</span>
-<span class="kw">for</span> n <span class="op">in</span> [<span class="num">2</span>, <span class="num">3</span>, <span class="num">5</span>, <span class="num">7</span>]:
-    <span class="kw">if</span> n <span class="op">==</span> target:
-        <span class="fn">print</span>(<span class="str">"Найдено!"</span>)
-        <span class="kw">break</span>
-<span class="kw">else</span>:
-    <span class="fn">print</span>(<span class="str">"Элемент не найден во всем списке"</span>)</pre>
-</div>
-  <div class="note">Блок <code>else</code> после <code>for</code>/<code>while</code> избавляет от необходимости заводить флаги <code>found = False</code> при поиске.</div>
-</div>
-</section>
-
-<section class="section" id="functions" data-category="core">
-  <div class="section-header">
-    <div class="section-title-wrap">
-      <span class="section-icon">🧩</span>
-      <h2>Функции и Аргументы</h2>
-    </div>
-    <span class="section-category-tag">Основы языка</span>
-  </div>
-  <div class="entry">
-  <div class="entry-title">Аргументы функций: *args, **kwargs, /, * <span class="tag pro">ПРОДВИНУТОЕ</span></div>
-  <div class="desc">Современный синтаксис позиционно-только и ключевых-только аргументов.</div>
-  
-  <div class="code-block">
-  <div class="code-header">
-    <span class="code-lang">🐍 python</span>
-    <button class="copy-btn">копировать</button>
-  </div>
-  <pre><span class="cmt"># / отделяет позиционно-только параметры (нельзя передать name=val)</span>
-<span class="cmt"># * отделяет ключевые-только параметры (ОБЯЗАТЕЛЬНО передавать name=val)</span>
-<span class="kw">def</span> <span class="fn">api_request</span>(url, /, timeout<span class="op">=</span><span class="num">30</span>, <span class="op">*</span>, retry<span class="op">=</span><span class="cls">True</span>, max_retries<span class="op">=</span><span class="num">3</span>):
-    <span class="fn">print</span>(<span class="str">f"Запрос к {url}, retry={retry}"</span>)
-
-<span class="cmt"># Правильный вызов:</span>
-api_request(<span class="str">"https://api.com"</span>, retry<span class="op">=</span><span class="cls">False</span>)
-<span class="cmt"># Ошибка! url нельзя передать как именованный: api_request(url="...")</span>
-
-<span class="cmt"># Универсальная функция с *args и **kwargs</span>
-<span class="kw">def</span> <span class="fn">proxy_call</span>(<span class="op">*</span>args, <span class="op">**</span>kwargs):
-    <span class="cmt"># args — tuple, kwargs — dict</span>
-    target_function(<span class="op">*</span>args, <span class="op">**</span>kwargs)</pre>
-</div>
-  
-</div>
-<div class="entry">
-  <div class="entry-title">Лямбда-функции (lambda) и замыкания </div>
-  <div class="desc">Анонимные функции в одну строку и сохранение лексического контекста.</div>
-  
-  <div class="code-block">
-  <div class="code-header">
-    <span class="code-lang">🐍 python</span>
-    <button class="copy-btn">копировать</button>
-  </div>
-  <pre><span class="cmt"># Лямбда: lambda аргументы: выражение</span>
-add <span class="op">=</span> <span class="kw">lambda</span> x, y: x <span class="op">+</span> y
-add(<span class="num">3</span>, <span class="num">5</span>)  <span class="cmt"># 8</span>
-
-<span class="cmt"># Замыкание (Closure) и ключевое слово nonlocal</span>
-<span class="kw">def</span> <span class="fn">make_counter</span>():
-    count <span class="op">=</span> <span class="num">0</span>
-    <span class="kw">def</span> <span class="fn">increment</span>():
-        <span class="kw">nonlocal</span> count  <span class="cmt"># доступ к переменной внешней функции</span>
-        count <span class="op">+=</span> <span class="num">1</span>
-        <span class="kw">return</span> count
-    <span class="kw">return</span> increment
-
-counter <span class="op">=</span> make_counter()
-<span class="fn">print</span>(counter())  <span class="cmt"># 1</span>
-<span class="fn">print</span>(counter())  <span class="cmt"># 2</span></pre>
-</div>
-  
-</div>
-</section>
-
 <section class="section" id="decorators" data-category="advanced">
   <div class="section-header">
     <div class="section-title-wrap">
@@ -908,7 +928,6 @@ download_data(<span class="num">100</span>)</pre>
   <div class="note">Порядок нескольких декораторов: <code>@dec1</code> затем <code>@dec2</code> выполняется как <code>dec1(dec2(func))</code> — снизу вверх при создании, сверху вниз при вызове!</div>
 </div>
 </section>
-
 <section class="section" id="context_managers" data-category="advanced">
   <div class="section-header">
     <div class="section-title-wrap">
@@ -961,7 +980,6 @@ download_data(<span class="num">100</span>)</pre>
   
 </div>
 </section>
-
 <section class="section" id="exceptions" data-category="advanced">
   <div class="section-header">
     <div class="section-title-wrap">
@@ -1012,7 +1030,6 @@ download_data(<span class="num">100</span>)</pre>
   
 </div>
 </section>
-
 <section class="section" id="files" data-category="advanced">
   <div class="section-header">
     <div class="section-title-wrap">
@@ -1088,7 +1105,6 @@ data <span class="op">=</span> {<span class="str">"user_id"</span>: <span class=
   
 </div>
 </section>
-
 <section class="section" id="oop" data-category="advanced">
   <div class="section-header">
     <div class="section-title-wrap">
@@ -1186,7 +1202,6 @@ p <span class="op">=</span> Product(<span class="num">1</span>, <span class="str
   
 </div>
 </section>
-
 <section class="section" id="typing_pro" data-category="advanced">
   <div class="section-header">
     <div class="section-title-wrap">
@@ -1234,7 +1249,6 @@ Handler <span class="op">=</span> Callable[[<span class="cls">int</span>, <span 
   
 </div>
 </section>
-
 <section class="section" id="asyncio_concurrency" data-category="advanced">
   <div class="section-header">
     <div class="section-title-wrap">
@@ -1292,7 +1306,6 @@ asyncio.run(main())</pre>
   
 </div>
 </section>
-
 <section class="section" id="generators" data-category="advanced">
   <div class="section-header">
     <div class="section-title-wrap">
@@ -1351,7 +1364,6 @@ perm <span class="op">=</span> <span class="fn">list</span>(it.permutations([<sp
   
 </div>
 </section>
-
 <section class="section" id="builtins" data-category="advanced">
   <div class="section-header">
     <div class="section-title-wrap">
@@ -1393,7 +1405,6 @@ port <span class="op">=</span> <span class="fn">getattr</span>(cfg, <span class=
   
 </div>
 </section>
-
 <section class="section" id="modules" data-category="advanced">
   <div class="section-header">
     <div class="section-title-wrap">
@@ -1430,7 +1441,6 @@ res <span class="op">=</span> subprocess.run([<span class="str">"git"</span>, <s
   
 </div>
 </section>
-
 <section class="section" id="frameworks_fastapi" data-category="web">
   <div class="section-header">
     <div class="section-title-wrap">
@@ -1508,7 +1518,6 @@ items_db: <span class="cls">dict</span>[<span class="cls">int</span>, <span clas
   
 </div>
 </section>
-
 <section class="section" id="frameworks_flask" data-category="web">
   <div class="section-header">
     <div class="section-title-wrap">
@@ -1584,7 +1593,6 @@ auth_bp <span class="op">=</span> Blueprint(<span class="str">"auth"</span>, __n
   
 </div>
 </section>
-
 <section class="section" id="frameworks_django" data-category="web">
   <div class="section-header">
     <div class="section-title-wrap">
@@ -1655,7 +1663,54 @@ Post.objects.filter(id<span class="op">=</span><span class="num">99</span>).dele
   
 </div>
 </section>
+<section class="section" id="frameworks_http" data-category="web">
+  <div class="section-header">
+    <div class="section-title-wrap">
+      <span class="section-icon">🌐</span>
+      <h2>HTTP Клиенты: Requests & HTTPX</h2>
+    </div>
+    <span class="section-category-tag">Фреймворки и Веб</span>
+  </div>
+  <div class="entry">
+  <div class="entry-title">HTTP запросы: Requests и современный асинхронный HTTPX </div>
+  <div class="desc">Выполнение сетевых запросов GET, POST, работа с JSON и заголовками.</div>
+  
+  <div class="code-block">
+  <div class="code-header">
+    <span class="code-lang">🐍 python</span>
+    <button class="copy-btn">копировать</button>
+  </div>
+  <pre><span class="cmt"># 1. Синхронный Requests: pip install requests</span>
+<span class="kw">import</span> requests
 
+<span class="cmt"># GET запрос с query-параметрами</span>
+resp <span class="op">=</span> requests.get(
+    <span class="str">"https://api.github.com/users/python"</span>,
+    params<span class="op">=</span>{<span class="str">"page"</span>: <span class="num">1</span>},
+    headers<span class="op">=</span>{<span class="str">"User-Agent"</span>: <span class="str">"MyApp/1.0"</span>},
+    timeout<span class="op">=</span>(<span class="num">3.05</span>, <span class="num">27</span>)  <span class="cmt"># (connect_timeout, read_timeout) — ВСЕГДА задавайте timeout!</span>
+)
+resp.raise_for_status()  <span class="cmt"># Вызывает HTTPError, если статус 4xx или 5xx</span>
+data <span class="op">=</span> resp.json()      <span class="cmt"># Автоматический парсинг ответа в Python dict/list</span>
+
+<span class="cmt"># POST запрос с отправкой JSON:</span>
+post_resp <span class="op">=</span> requests.post(<span class="str">"https://httpbin.org/post"</span>, json<span class="op">=</span>{<span class="str">"key"</span>: <span class="str">"value"</span>})
+
+<span class="cmt"># Сессия (сохраняет cookies, ускоряет соединения через Connection Pooling):</span>
+<span class="kw">with</span> requests.Session() <span class="kw">as</span> s:
+    s.headers.update({<span class="str">"Authorization"</span>: <span class="str">"Bearer token123"</span>})
+    r1 <span class="op">=</span> s.get(<span class="str">"https://api.service.com/profile"</span>)
+
+<span class="cmt"># 2. Современный асинхронный HTTPX: pip install httpx</span>
+<span class="kw">import</span> httpx
+
+<span class="kw">async with</span> httpx.AsyncClient() <span class="kw">as</span> client:
+    res <span class="op">=</span> <span class="kw">await</span> client.get(<span class="str">"https://httpbin.org/get"</span>)
+    <span class="fn">print</span>(res.status_code, res.json())</pre>
+</div>
+  
+</div>
+</section>
 <section class="section" id="frameworks_sql" data-category="database">
   <div class="section-header">
     <div class="section-title-wrap">
@@ -1712,112 +1767,6 @@ Base.metadata.create_all(engine)
   
 </div>
 </section>
-
-<section class="section" id="frameworks_http" data-category="web">
-  <div class="section-header">
-    <div class="section-title-wrap">
-      <span class="section-icon">🌐</span>
-      <h2>HTTP Клиенты: Requests & HTTPX</h2>
-    </div>
-    <span class="section-category-tag">Фреймворки и Веб</span>
-  </div>
-  <div class="entry">
-  <div class="entry-title">HTTP запросы: Requests и современный асинхронный HTTPX </div>
-  <div class="desc">Выполнение сетевых запросов GET, POST, работа с JSON и заголовками.</div>
-  
-  <div class="code-block">
-  <div class="code-header">
-    <span class="code-lang">🐍 python</span>
-    <button class="copy-btn">копировать</button>
-  </div>
-  <pre><span class="cmt"># 1. Синхронный Requests: pip install requests</span>
-<span class="kw">import</span> requests
-
-<span class="cmt"># GET запрос с query-параметрами</span>
-resp <span class="op">=</span> requests.get(
-    <span class="str">"https://api.github.com/users/python"</span>,
-    params<span class="op">=</span>{<span class="str">"page"</span>: <span class="num">1</span>},
-    headers<span class="op">=</span>{<span class="str">"User-Agent"</span>: <span class="str">"MyApp/1.0"</span>},
-    timeout<span class="op">=</span>(<span class="num">3.05</span>, <span class="num">27</span>)  <span class="cmt"># (connect_timeout, read_timeout) — ВСЕГДА задавайте timeout!</span>
-)
-resp.raise_for_status()  <span class="cmt"># Вызывает HTTPError, если статус 4xx или 5xx</span>
-data <span class="op">=</span> resp.json()      <span class="cmt"># Автоматический парсинг ответа в Python dict/list</span>
-
-<span class="cmt"># POST запрос с отправкой JSON:</span>
-post_resp <span class="op">=</span> requests.post(<span class="str">"https://httpbin.org/post"</span>, json<span class="op">=</span>{<span class="str">"key"</span>: <span class="str">"value"</span>})
-
-<span class="cmt"># Сессия (сохраняет cookies, ускоряет соединения через Connection Pooling):</span>
-<span class="kw">with</span> requests.Session() <span class="kw">as</span> s:
-    s.headers.update({<span class="str">"Authorization"</span>: <span class="str">"Bearer token123"</span>})
-    r1 <span class="op">=</span> s.get(<span class="str">"https://api.service.com/profile"</span>)
-
-<span class="cmt"># 2. Современный асинхронный HTTPX: pip install httpx</span>
-<span class="kw">import</span> httpx
-
-<span class="kw">async with</span> httpx.AsyncClient() <span class="kw">as</span> client:
-    res <span class="op">=</span> <span class="kw">await</span> client.get(<span class="str">"https://httpbin.org/get"</span>)
-    <span class="fn">print</span>(res.status_code, res.json())</pre>
-</div>
-  
-</div>
-</section>
-
-<section class="section" id="frameworks_testing" data-category="tooling">
-  <div class="section-header">
-    <div class="section-title-wrap">
-      <span class="section-icon">🧪</span>
-      <h2>Тестирование (Pytest)</h2>
-    </div>
-    <span class="section-category-tag">Тестирование и DevOps</span>
-  </div>
-  <div class="entry">
-  <div class="entry-title">Тестирование с Pytest: фикстуры и параметризация <span class="tag pro">TESTING</span></div>
-  <div class="desc">Стандарт де-факто для тестирования в Python. Запуск через <code>pytest -v</code>.</div>
-  
-  <div class="code-block">
-  <div class="code-header">
-    <span class="code-lang">🐍 python</span>
-    <button class="copy-btn">копировать</button>
-  </div>
-  <pre><span class="cmt"># Установка: pip install pytest</span>
-<span class="kw">import</span> pytest
-
-<span class="kw">def</span> <span class="fn">add</span>(a, b):
-    <span class="kw">return</span> a <span class="op">+</span> b
-
-<span class="cmt"># 1. Простой тест через обычный assert (понятные сообщения об ошибках)</span>
-<span class="kw">def</span> <span class="fn">test_add_simple</span>():
-    <span class="kw">assert</span> add(<span class="num">2</span>, <span class="num">3</span>) <span class="op">==</span> <span class="num">5</span>
-
-<span class="cmt"># 2. Тестирование исключений</span>
-<span class="kw">def</span> <span class="fn">test_zero_division</span>():
-    <span class="kw">with</span> pytest.raises(ZeroDivisionError):
-        _ <span class="op">=</span> <span class="num">1</span> <span class="op">/</span> <span class="num">0</span>
-
-<span class="cmt"># 3. Фикстуры: подготовка данных и teardown (очистка)</span>
-<span class="op">@</span>pytest.fixture
-<span class="kw">def</span> <span class="fn">sample_user</span>():
-    user <span class="op">=</span> {<span class="str">"id"</span>: <span class="num">1</span>, <span class="str">"role"</span>: <span class="str">"admin"</span>}
-    <span class="kw">yield</span> user  <span class="cmt"># передача объекта в тест</span>
-    <span class="cmt"># Код после yield выполняется ПОСЛЕ завершения теста (очистка):</span>
-    user.clear()
-
-<span class="kw">def</span> <span class="fn">test_user_role</span>(sample_user):
-    <span class="kw">assert</span> sample_user[<span class="str">"role"</span>] <span class="op">==</span> <span class="str">"admin"</span>
-
-<span class="cmt"># 4. Параметризация (один тест — много наборов данных!)</span>
-<span class="op">@</span>pytest.mark.parametrize(<span class="str">"a, b, expected"</span>, [
-    (<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>),
-    (<span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>),
-    (<span class="op">-</span><span class="num">1</span>, <span class="num">1</span>, <span class="num">0</span>),
-])
-<span class="kw">def</span> <span class="fn">test_add_parametrized</span>(a, b, expected):
-    <span class="kw">assert</span> add(a, b) <span class="op">==</span> expected</pre>
-</div>
-  
-</div>
-</section>
-
 <section class="section" id="data_science" data-category="database">
   <div class="section-header">
     <div class="section-title-wrap">
@@ -1892,7 +1841,61 @@ avg_by_dept <span class="op">=</span> df.groupby(<span class="str">"dept"</span>
   
 </div>
 </section>
+<section class="section" id="frameworks_testing" data-category="tooling">
+  <div class="section-header">
+    <div class="section-title-wrap">
+      <span class="section-icon">🧪</span>
+      <h2>Тестирование (Pytest)</h2>
+    </div>
+    <span class="section-category-tag">Тестирование и DevOps</span>
+  </div>
+  <div class="entry">
+  <div class="entry-title">Тестирование с Pytest: фикстуры и параметризация <span class="tag pro">TESTING</span></div>
+  <div class="desc">Стандарт де-факто для тестирования в Python. Запуск через <code>pytest -v</code>.</div>
+  
+  <div class="code-block">
+  <div class="code-header">
+    <span class="code-lang">🐍 python</span>
+    <button class="copy-btn">копировать</button>
+  </div>
+  <pre><span class="cmt"># Установка: pip install pytest</span>
+<span class="kw">import</span> pytest
 
+<span class="kw">def</span> <span class="fn">add</span>(a, b):
+    <span class="kw">return</span> a <span class="op">+</span> b
+
+<span class="cmt"># 1. Простой тест через обычный assert (понятные сообщения об ошибках)</span>
+<span class="kw">def</span> <span class="fn">test_add_simple</span>():
+    <span class="kw">assert</span> add(<span class="num">2</span>, <span class="num">3</span>) <span class="op">==</span> <span class="num">5</span>
+
+<span class="cmt"># 2. Тестирование исключений</span>
+<span class="kw">def</span> <span class="fn">test_zero_division</span>():
+    <span class="kw">with</span> pytest.raises(ZeroDivisionError):
+        _ <span class="op">=</span> <span class="num">1</span> <span class="op">/</span> <span class="num">0</span>
+
+<span class="cmt"># 3. Фикстуры: подготовка данных и teardown (очистка)</span>
+<span class="op">@</span>pytest.fixture
+<span class="kw">def</span> <span class="fn">sample_user</span>():
+    user <span class="op">=</span> {<span class="str">"id"</span>: <span class="num">1</span>, <span class="str">"role"</span>: <span class="str">"admin"</span>}
+    <span class="kw">yield</span> user  <span class="cmt"># передача объекта в тест</span>
+    <span class="cmt"># Код после yield выполняется ПОСЛЕ завершения теста (очистка):</span>
+    user.clear()
+
+<span class="kw">def</span> <span class="fn">test_user_role</span>(sample_user):
+    <span class="kw">assert</span> sample_user[<span class="str">"role"</span>] <span class="op">==</span> <span class="str">"admin"</span>
+
+<span class="cmt"># 4. Параметризация (один тест — много наборов данных!)</span>
+<span class="op">@</span>pytest.mark.parametrize(<span class="str">"a, b, expected"</span>, [
+    (<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>),
+    (<span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>),
+    (<span class="op">-</span><span class="num">1</span>, <span class="num">1</span>, <span class="num">0</span>),
+])
+<span class="kw">def</span> <span class="fn">test_add_parametrized</span>(a, b, expected):
+    <span class="kw">assert</span> add(a, b) <span class="op">==</span> expected</pre>
+</div>
+  
+</div>
+</section>
 <section class="section" id="devops_tooling" data-category="tooling">
   <div class="section-header">
     <div class="section-title-wrap">
@@ -1947,7 +1950,6 @@ mypy . --strict        <span class="cmt"># статическая проверк
   
 </div>
 </section>
-
 <section class="section" id="debugging_perf" data-category="tooling">
   <div class="section-header">
     <div class="section-title-wrap">
@@ -2021,7 +2023,6 @@ big_gen <span class="op">=</span> (x <span class="kw">for</span> x <span class="
   
 </div>
 </section>
-
 <section class="section" id="best_practices" data-category="tooling">
   <div class="section-header">
     <div class="section-title-wrap">
@@ -2031,7 +2032,7 @@ big_gen <span class="op">=</span> (x <span class="kw">for</span> x <span class="
     <span class="section-category-tag">Тестирование и DevOps</span>
   </div>
   <div class="entry">
-  <div class="entry-title">Идиомы: EAFP против LBYL <span class="tag ">IDИОМЫ</span></div>
+  <div class="entry-title">Идиомы: EAFP против LBYL <span class="tag ">ИДИОМЫ</span></div>
   <div class="desc">Философия кода Python: «Легче попросить прощения, чем разрешения».</div>
   
   <div class="code-block">
@@ -2094,6 +2095,7 @@ dk <span class="op">=</span> hashlib.pbkdf2_hmac(<span class="str">'sha256'</spa
 <button id="back-top" title="Наверх" aria-label="Вернуться наверх">↑</button>
 <div id="toast" role="status">Код скопирован!</div>
 
+<script src="translations.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
